@@ -1,13 +1,115 @@
-import { Typography } from "@mui/material";
+import { Box, Button, Container, Divider, Grid, IconButton, List, ListItem, TextField, Typography, styled } from "@mui/material";
 import MiniDrawer from "../components/drawer";
+import AutoAwesomeOutlinedIcon from '@mui/icons-material/AutoAwesomeOutlined';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import React from "react";
+import { Variants } from "../components/variant";
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 export function AddProduct() {
+    const [showGenerateText, setShowGenerateText] = React.useState(false)
+
+    const handleAutoPressed = () => {
+        setShowGenerateText(showGenerateText => !showGenerateText)
+    }
+
+    // useEffect(() => { console.log(showGenerateText) }, [showGenerateText])
+
+
     return (
         <MiniDrawer >
-            <Typography>
-                Add product screenaaaaaaaaaaaasdfsdf
-            </Typography>
+            <Container sx={{ display: "flex", flexDirection: "column" }}>
+                <Typography>Title</Typography>
+                <TextField sx={{ my: 1 }} size="small" />
+                <Typography>Description</Typography>
+                <TextField sx={{ mt: 1 }} multiline size="small" minRows={3} />
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                }}>
+                    <IconButton onClick={handleAutoPressed}>
+                        <AutoAwesomeOutlinedIcon />:
+                    </IconButton>
+                </Box>
+                <Typography>Media*</Typography>
+                <Box>
+                    <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+                        Upload media
+                        <VisuallyHiddenInput type="file" accept="video/*,image/*" multiple />
+                    </Button>
+                </Box>
+                <Typography>Pricing</Typography>
+                <Box>
+                    <Grid container spacing={2}>
+                        <Grid item xs={3} width={"auto"}>
+                            <TextField label="Price" size="small" required />
+                        </Grid>
+                        <Grid item xs={3} width={"auto"}>
+                            <TextField label="Compare-at" size="small" />
+                        </Grid>
+                        <Grid item xs={4} width={"auto"} />
+                        <Grid item xs={3} width={"auto"}>
+                            <TextField label="Cost" size="small" />
+                        </Grid>
+                        <Grid item xs={3} width={"auto"}>
+                            <TextField label="Profit" size="small" defaultValue={"--"} InputProps={{ readOnly: true }} />
+                        </Grid>
+                        <Grid item xs={3} width={"auto"}>
+                            <TextField label="Margin" size="small" InputProps={{ readOnly: true }} defaultValue={"--"} />
+                        </Grid>
+                    </Grid>
+                </Box>
 
-        </MiniDrawer>
+                <Typography>Inventory</Typography>
+                <Box>
+                    <Grid container spacing={2} columnSpacing={1} >
+                        <Grid item xs={3}>
+                            <TextField label="SKU" size="small" />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField label="Barcode" size="small" />
+                        </Grid>
+                        <Grid item xs={6} />
+                        <Grid item xs={3}>
+                            <TextField label="Unavailable" size="small" />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField label="Commited" size="small" />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField label="Available" size="small" />
+                        </Grid>
+                        <Grid item xs={3}>
+                            <TextField label="On-hand" size="small" defaultValue={"--"} InputProps={{ readOnly: true }} />
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Typography>Variants</Typography>
+                <List >
+                    <ListItem >
+                        <Box sx={{ width: "100%" }}>
+                            <Variants name="Color" values={["Red", "Blue", "Green"]} />
+                        </Box>
+                    </ListItem>
+                    <Divider />
+                    {/* <ListItem >
+                        <Box sx={{ width: "100%" }}>
+                            <Variants name="Color" values={["Red", "Blue", "Green"]} />
+                        </Box>
+                    </ListItem> */}
+                </List>
+            </Container >
+        </MiniDrawer >
     )
 }
