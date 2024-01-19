@@ -40,8 +40,7 @@ interface ICreateProduct {
 }
 
 export function AddProduct() {
-    const [showGenerateText, setShowGenerateText] =
-        React.useState(false);
+    const [showGenerateText, setShowGenerateText] = React.useState(false);
 
     const handleAutoPressed = () => {
         setShowGenerateText((showGenerateText) => !showGenerateText);
@@ -60,18 +59,11 @@ export function AddProduct() {
 
     return (
         <MiniDrawer>
-            <Container
-                sx={{ display: "flex", flexDirection: "column" }}
-            >
+            <Container sx={{ display: "flex", flexDirection: "column" }}>
                 <Typography>Title</Typography>
                 <TextField sx={{ my: 1 }} size="small" />
                 <Typography>Description</Typography>
-                <TextField
-                    sx={{ mt: 1 }}
-                    multiline
-                    size="small"
-                    minRows={3}
-                />
+                <TextField sx={{ mt: 1 }} multiline size="small" minRows={3} />
                 <Box
                     sx={{
                         display: "flex",
@@ -101,17 +93,10 @@ export function AddProduct() {
                 <Box>
                     <Grid container spacing={2}>
                         <Grid item xs={3} width={"auto"}>
-                            <TextField
-                                label="Price"
-                                size="small"
-                                required
-                            />
+                            <TextField label="Price" size="small" required />
                         </Grid>
                         <Grid item xs={3} width={"auto"}>
-                            <TextField
-                                label="Compare-at"
-                                size="small"
-                            />
+                            <TextField label="Compare-at" size="small" />
                         </Grid>
                         <Grid item xs={4} width={"auto"} />
                         <Grid item xs={3} width={"auto"}>
@@ -147,22 +132,13 @@ export function AddProduct() {
                         </Grid>
                         <Grid item xs={6} />
                         <Grid item xs={3}>
-                            <TextField
-                                label="Unavailable"
-                                size="small"
-                            />
+                            <TextField label="Unavailable" size="small" />
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField
-                                label="Commited"
-                                size="small"
-                            />
+                            <TextField label="Commited" size="small" />
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField
-                                label="Available"
-                                size="small"
-                            />
+                            <TextField label="Available" size="small" />
                         </Grid>
                         <Grid item xs={3}>
                             <TextField

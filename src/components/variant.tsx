@@ -16,6 +16,8 @@ export interface IVariant {
 
 export function Variants(props: IVariant) {
     const [openEditor, setOpenEditor] = React.useState(true);
+    const [values, setValues] = React.useState(props.values);
+    const [focusIndex, setFocusIndex] = React.useState(-1);
 
     const handleOpenEditor = () => {
         setOpenEditor(true);
@@ -23,6 +25,18 @@ export function Variants(props: IVariant) {
 
     const handleCloseEditor = () => {
         setOpenEditor(false);
+    };
+
+    const handleNewValue = (e: any) => {
+        const value = e.data;
+        console.log(value);
+        if (value == "") {
+            return;
+        } else {
+            e.preventDefault();
+            setFocusIndex(values.length);
+            setValues([...values, value]);
+        }
     };
 
     return (
@@ -38,10 +52,7 @@ export function Variants(props: IVariant) {
                                     flexDirection: "row",
                                 }}
                             >
-                                <TextField
-                                    size="small"
-                                    defaultValue={props.name}
-                                />
+                                <TextField size="small" defaultValue={props.name} />
                                 <Box>
                                     <IconButton>
                                         <DeleteIcon />
@@ -57,7 +68,7 @@ export function Variants(props: IVariant) {
                                     flexDirection: "column",
                                 }}
                             >
-                                {props.values.map((value, index) => (
+                                {values.map((value, index) => (
                                     <Box
                                         key={index}
                                         sx={{
@@ -70,6 +81,7 @@ export function Variants(props: IVariant) {
                                                 sx={{ mb: 1 }}
                                                 size="small"
                                                 defaultValue={value}
+                                                autoFocus={index == focusIndex}
                                             />
                                         </Box>
                                         <Box>
@@ -79,6 +91,15 @@ export function Variants(props: IVariant) {
                                         </Box>
                                     </Box>
                                 ))}
+                                <Box>
+                                    <TextField
+                                        sx={{ mb: 1 }}
+                                        size="small"
+                                        onBeforeInput={(e) => {
+                                            handleNewValue(e);
+                                        }}
+                                    />
+                                </Box>
                             </Box>
                         </Box>
                     </Box>
@@ -96,11 +117,9 @@ export function Variants(props: IVariant) {
                         <Box>
                             <Typography>{props.name}</Typography>
                             <Breadcrumbs>
-                                {props.values.map((value, index) => (
+                                {values.map((value, index) => (
                                     <Box key={index}>
-                                        <Typography>
-                                            {value}
-                                        </Typography>
+                                        <Typography>{value}</Typography>
                                     </Box>
                                 ))}
                             </Breadcrumbs>
@@ -113,10 +132,7 @@ export function Variants(props: IVariant) {
                             }}
                         >
                             <Box>
-                                <Button
-                                    variant="outlined"
-                                    onClick={handleOpenEditor}
-                                >
+                                <Button variant="outlined" onClick={handleOpenEditor}>
                                     Edit
                                 </Button>
                             </Box>
