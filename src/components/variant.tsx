@@ -15,7 +15,7 @@ export interface IVariant {
 }
 
 export function Variants(props: IVariant) {
-    const [openEditor, setOpenEditor] = React.useState(true);
+    const [openEditor, setOpenEditor] = React.useState(false);
     const [values, setValues] = React.useState(props.values);
     const [focusIndex, setFocusIndex] = React.useState(-1);
 

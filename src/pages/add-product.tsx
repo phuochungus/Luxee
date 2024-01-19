@@ -7,14 +7,22 @@ import {
     IconButton,
     List,
     ListItem,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableRow,
     TextField,
     Typography,
     styled,
 } from "@mui/material";
 import MiniDrawer from "../components/drawer";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import { IVariant, Variants } from "../components/variant";
 
 const VisuallyHiddenInput = styled("input")({
@@ -55,7 +63,21 @@ export function AddProduct() {
             name: "Size",
             values: ["S", "M", "L"],
         },
+        {
+            name: "Material",
+            values: ["Cotton", "Polyester"],
+        },
     ];
+
+    const getAllCombinations = (variants: IVariant[]): string[][] => {
+        const cartesian = (...a: any) =>
+            a.reduce((a: any, b: any) =>
+                a.flatMap((d: any) => b.map((e: any) => [d, e].flat()))
+            );
+        const variantValues = variants.map((variant) => variant.values);
+        const variantCombinations = cartesian(...variantValues);
+        return variantCombinations;
+    };
 
     return (
         <MiniDrawer>
@@ -168,6 +190,43 @@ export function AddProduct() {
                         );
                     })}
                 </List>
+                <Box>
+                    <Table>
+                        <TableHead>
+                            <TableCell width={2}>
+                                <Box display={"flex"} flexDirection={"row"}>
+                                    No.
+                                    <TableSortLabel />
+                                </Box>
+                            </TableCell>
+                            <TableCell>
+                                <Box display={"flex"} flexDirection={"row"}>
+                                    Variant ({variants.map((a) => a.name).join("-")})
+                                    <TableSortLabel />
+                                </Box>
+                            </TableCell>
+                            <TableCell align="right">Action</TableCell>
+                        </TableHead>
+                        <TableBody>
+                            {getAllCombinations(variants).map((combination, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{combination.join("-")}</TableCell>
+                                    <TableCell align="right">
+                                        <Box>
+                                            <IconButton>
+                                                <VisibilityOffIcon />
+                                            </IconButton>
+                                            <IconButton>
+                                                <EditIcon />
+                                            </IconButton>
+                                        </Box>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </Box>
             </Container>
         </MiniDrawer>
     );
