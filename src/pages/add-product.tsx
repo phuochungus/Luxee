@@ -14,7 +14,6 @@ import {
     TableRow,
     TextField,
     Typography,
-    styled,
 } from "@mui/material";
 import MiniDrawer from "../components/drawer";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
@@ -23,53 +22,55 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import EditIcon from "@mui/icons-material/Edit";
 import React from "react";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import { IVariant, Variants } from "../components/variant";
+import { IVariantOption, VariantOption } from "../components/variant-option";
 
-const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-});
-
-interface ICreateProduct {
+interface Product {
     title: string;
     description: string;
-    media: string[];
-    price: number;
-    compareAt: number;
-    cost?: number;
-    variants: IVariant[];
+    media: string[] | FileList | null;
+    price: string;
+    compareAt?: string;
+    cost: string;
+    sku?: string;
+    barcode?: string;
+    unavailable: number;
+    commited: number;
+    available: number;
+    variantOptions: IVariantOption[];
 }
 
 export function AddProduct() {
+    const [createProductDto, setCreateProductDto] = React.useState<Product>({
+        title: "",
+        description: "",
+        media: [],
+        price: "0",
+        cost: "0",
+        unavailable: 0,
+        variantOptions: [
+            {
+                name: "Color",
+                values: ["Red", "Blue", "Green"],
+            },
+            {
+                name: "Size",
+                values: ["S", "M", "L"],
+            },
+            {
+                name: "Material",
+                values: ["Cotton", "Polyester"],
+            },
+        ],
+        available: 0,
+        commited: 0,
+    });
     const [showGenerateText, setShowGenerateText] = React.useState(false);
 
     const handleAutoPressed = () => {
         setShowGenerateText((showGenerateText) => !showGenerateText);
     };
 
-    const variants: IVariant[] = [
-        {
-            name: "Color",
-            values: ["Red", "Blue", "Green"],
-        },
-        {
-            name: "Size",
-            values: ["S", "M", "L"],
-        },
-        {
-            name: "Material",
-            values: ["Cotton", "Polyester"],
-        },
-    ];
-
-    const getAllCombinations = (variants: IVariant[]): string[][] => {
+    const getAllCombinations = (variants: IVariantOption[]): string[][] => {
         const cartesian = (...a: any) =>
             a.reduce((a: any, b: any) =>
                 a.flatMap((d: any) => b.map((e: any) => [d, e].flat()))
@@ -83,9 +84,31 @@ export function AddProduct() {
         <MiniDrawer>
             <Container sx={{ display: "flex", flexDirection: "column" }}>
                 <Typography>Title</Typography>
-                <TextField sx={{ my: 1 }} size="small" />
+                <TextField
+                    sx={{ my: 1 }}
+                    size="small"
+                    value={createProductDto.title}
+                    onChange={(e) =>
+                        setCreateProductDto({
+                            ...createProductDto,
+                            title: e.target.value,
+                        })
+                    }
+                />
                 <Typography>Description</Typography>
-                <TextField sx={{ mt: 1 }} multiline size="small" minRows={3} />
+                <TextField
+                    sx={{ mt: 1 }}
+                    multiline
+                    size="small"
+                    minRows={3}
+                    value={createProductDto.description}
+                    onChange={(e) =>
+                        setCreateProductDto({
+                            ...createProductDto,
+                            description: e.target.value,
+                        })
+                    }
+                />
                 <Box
                     sx={{
                         display: "flex",
@@ -96,7 +119,7 @@ export function AddProduct() {
                         <AutoAwesomeOutlinedIcon />:
                     </IconButton>
                 </Box>
-                <Typography>Media*</Typography>
+                <Typography>Media</Typography>
                 <Box>
                     <Button
                         component="label"
@@ -104,10 +127,17 @@ export function AddProduct() {
                         startIcon={<CloudUploadIcon />}
                     >
                         Upload media
-                        <VisuallyHiddenInput
+                        <input
                             type="file"
                             accept="video/*,image/*"
                             multiple
+                            hidden
+                            onChange={(e) =>
+                                setCreateProductDto({
+                                    ...createProductDto,
+                                    media: e.target.files,
+                                })
+                            }
                         />
                     </Button>
                 </Box>
@@ -115,21 +145,57 @@ export function AddProduct() {
                 <Box>
                     <Grid container spacing={2}>
                         <Grid item xs={3} width={"auto"}>
-                            <TextField label="Price" size="small" required />
+                            <TextField
+                                label="Price"
+                                size="small"
+                                required
+                                value={createProductDto.price}
+                                onChange={(e) =>
+                                    setCreateProductDto({
+                                        ...createProductDto,
+                                        price: e.target.value,
+                                    })
+                                }
+                            />
                         </Grid>
                         <Grid item xs={3} width={"auto"}>
-                            <TextField label="Compare-at" size="small" />
+                            <TextField
+                                label="Compare-at"
+                                size="small"
+                                defaultValue={"--"}
+                                value={createProductDto.compareAt}
+                                onChange={(e) =>
+                                    setCreateProductDto({
+                                        ...createProductDto,
+                                        compareAt: e.target.value,
+                                    })
+                                }
+                            />
                         </Grid>
                         <Grid item xs={4} width={"auto"} />
                         <Grid item xs={3} width={"auto"}>
-                            <TextField label="Cost" size="small" />
+                            <TextField
+                                label="Cost"
+                                size="small"
+                                value={createProductDto.cost}
+                                onChange={(e) =>
+                                    setCreateProductDto({
+                                        ...createProductDto,
+                                        cost: e.target.value,
+                                    })
+                                }
+                            />
                         </Grid>
                         <Grid item xs={3} width={"auto"}>
                             <TextField
                                 label="Profit"
                                 size="small"
-                                defaultValue={"--"}
                                 InputProps={{ readOnly: true }}
+                                disabled
+                                value={
+                                    parseFloat(createProductDto.price) -
+                                    parseFloat(createProductDto.cost)
+                                }
                             />
                         </Grid>
                         <Grid item xs={3} width={"auto"}>
@@ -137,7 +203,21 @@ export function AddProduct() {
                                 label="Margin"
                                 size="small"
                                 InputProps={{ readOnly: true }}
-                                defaultValue={"--"}
+                                disabled
+                                value={
+                                    isNaN(
+                                        (parseFloat(createProductDto.price) -
+                                            parseFloat(createProductDto.cost)) /
+                                            parseFloat(createProductDto.price)
+                                    )
+                                        ? "--"
+                                        : `${(
+                                              ((parseFloat(createProductDto.price) -
+                                                  parseFloat(createProductDto.cost)) /
+                                                  parseFloat(createProductDto.price)) *
+                                              100
+                                          ).toFixed(2)}%`
+                                }
                             />
                         </Grid>
                     </Grid>
@@ -147,26 +227,40 @@ export function AddProduct() {
                 <Box>
                     <Grid container spacing={2} columnSpacing={1}>
                         <Grid item xs={3}>
-                            <TextField label="SKU" size="small" />
+                            <TextField
+                                label="SKU"
+                                size="small"
+                                value={createProductDto.sku}
+                                onChange={(e) =>
+                                    setCreateProductDto({
+                                        ...createProductDto,
+                                        sku: e.target.value,
+                                    })
+                                }
+                            />
                         </Grid>
                         <Grid item xs={3}>
                             <TextField label="Barcode" size="small" />
                         </Grid>
                         <Grid item xs={6} />
                         <Grid item xs={3}>
-                            <TextField label="Unavailable" size="small" />
+                            <TextField
+                                label="Unavailable"
+                                size="small"
+                                defaultValue={0}
+                            />
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField label="Commited" size="small" />
+                            <TextField label="Commited" size="small" defaultValue={0} />
                         </Grid>
                         <Grid item xs={3}>
-                            <TextField label="Available" size="small" />
+                            <TextField label="Available" size="small" defaultValue={0} />
                         </Grid>
                         <Grid item xs={3}>
                             <TextField
                                 label="On-hand"
                                 size="small"
-                                defaultValue={"--"}
+                                defaultValue={"0"}
                                 InputProps={{ readOnly: true }}
                             />
                         </Grid>
@@ -174,13 +268,13 @@ export function AddProduct() {
                 </Box>
                 <Typography>Variants</Typography>
                 <List>
-                    {variants.map((variant, index) => {
+                    {createProductDto.variantOptions.map((variant, index) => {
                         return (
                             <div key={index}>
                                 <Divider />
                                 <ListItem>
                                     <Box sx={{ width: "100%" }}>
-                                        <Variants
+                                        <VariantOption
                                             name={variant.name}
                                             values={variant.values}
                                         />
@@ -201,29 +295,35 @@ export function AddProduct() {
                             </TableCell>
                             <TableCell>
                                 <Box display={"flex"} flexDirection={"row"}>
-                                    Variant ({variants.map((a) => a.name).join("-")})
+                                    Variant (
+                                    {createProductDto.variantOptions
+                                        .map((a) => a.name)
+                                        .join("-")}
+                                    )
                                     <TableSortLabel />
                                 </Box>
                             </TableCell>
                             <TableCell align="right">Action</TableCell>
                         </TableHead>
                         <TableBody>
-                            {getAllCombinations(variants).map((combination, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{combination.join("-")}</TableCell>
-                                    <TableCell align="right">
-                                        <Box>
-                                            <IconButton>
-                                                <VisibilityOffIcon />
-                                            </IconButton>
-                                            <IconButton>
-                                                <EditIcon />
-                                            </IconButton>
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {getAllCombinations(createProductDto.variantOptions).map(
+                                (combination, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{combination.join("-")}</TableCell>
+                                        <TableCell align="right">
+                                            <Box>
+                                                <IconButton>
+                                                    <VisibilityOffIcon />
+                                                </IconButton>
+                                                <IconButton>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            )}
                         </TableBody>
                     </Table>
                 </Box>

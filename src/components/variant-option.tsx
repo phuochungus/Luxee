@@ -9,12 +9,12 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
 
-export interface IVariant {
+export interface IVariantOption {
     name: string;
     values: string[];
 }
 
-export function Variants(props: IVariant) {
+export function VariantOption(props: IVariantOption) {
     const [openEditor, setOpenEditor] = React.useState(false);
     const [values, setValues] = React.useState(props.values);
     const [focusIndex, setFocusIndex] = React.useState(-1);
