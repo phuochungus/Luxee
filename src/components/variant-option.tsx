@@ -8,14 +8,14 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
+import { VariationList } from "../pages/add-product";
 
-export interface IVariantOption {
-    name: string;
-    values: string[];
+interface VariationRowProps extends VariationList {
+    openEditor?: boolean;
 }
 
-export function VariantOption(props: IVariantOption) {
-    const [openEditor, setOpenEditor] = React.useState(false);
+export function VariationRow(props: VariationRowProps) {
+    const [openEditor, setOpenEditor] = React.useState(props.openEditor ?? true);
     const [values, setValues] = React.useState(props.values);
     const [focusIndex, setFocusIndex] = React.useState(-1);
 
