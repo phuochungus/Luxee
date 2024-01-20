@@ -11,31 +11,32 @@ import React from "react";
 import { VariationList } from "../pages/add-product";
 
 interface VariationRowProps extends VariationList {
+    index: number;
     openEditor?: boolean;
+    saveChange: (name: string, values: string[]) => void;
+    deleteRow: () => void;
 }
 
 export function VariationRow(props: VariationRowProps) {
-    const [openEditor, setOpenEditor] = React.useState(props.openEditor ?? true);
-    const [values, setValues] = React.useState(props.values);
+    const [openEditor, setOpenEditor] = React.useState(props.openEditor ?? false);
     const [focusIndex, setFocusIndex] = React.useState(-1);
-
-    const handleOpenEditor = () => {
-        setOpenEditor(true);
-    };
-
-    const handleCloseEditor = () => {
-        setOpenEditor(false);
-    };
+    const [draftVariationList, setDraftVariation] = React.useState<VariationList>({
+        name: props.name,
+        values: props.values,
+    });
 
     const handleNewValue = (e: any) => {
         const value = e.data;
-        console.log(value);
         if (value == "") {
             return;
         } else {
             e.preventDefault();
-            setFocusIndex(values.length);
-            setValues([...values, value]);
+            setFocusIndex(draftVariationList.values.length);
+
+            setDraftVariation({
+                ...draftVariationList,
+                values: [...draftVariationList.values, value],
+            });
         }
     };
 
@@ -52,9 +53,18 @@ export function VariationRow(props: VariationRowProps) {
                                     flexDirection: "row",
                                 }}
                             >
-                                <TextField size="small" defaultValue={props.name} />
+                                <TextField
+                                    size="small"
+                                    value={draftVariationList.name}
+                                    onChange={(e) => {
+                                        setDraftVariation({
+                                            ...draftVariationList,
+                                            name: e.target.value,
+                                        });
+                                    }}
+                                />
                                 <Box>
-                                    <IconButton>
+                                    <IconButton onClick={props.deleteRow}>
                                         <DeleteIcon />
                                     </IconButton>
                                 </Box>
@@ -68,7 +78,7 @@ export function VariationRow(props: VariationRowProps) {
                                     flexDirection: "column",
                                 }}
                             >
-                                {values.map((value, index) => (
+                                {draftVariationList.values.map((_, index) => (
                                     <Box
                                         key={index}
                                         sx={{
@@ -80,12 +90,32 @@ export function VariationRow(props: VariationRowProps) {
                                             <TextField
                                                 sx={{ mb: 1 }}
                                                 size="small"
-                                                defaultValue={value}
+                                                value={draftVariationList.values[index]}
+                                                onChange={(e) => {
+                                                    setDraftVariation({
+                                                        ...draftVariationList,
+                                                        values: draftVariationList.values.map(
+                                                            (value, i) =>
+                                                                i == index
+                                                                    ? e.target.value
+                                                                    : value
+                                                        ),
+                                                    });
+                                                }}
                                                 autoFocus={index == focusIndex}
                                             />
                                         </Box>
                                         <Box>
-                                            <IconButton>
+                                            <IconButton
+                                                onClick={() => {
+                                                    setDraftVariation({
+                                                        ...draftVariationList,
+                                                        values: draftVariationList.values.filter(
+                                                            (_, i) => i != index
+                                                        ),
+                                                    });
+                                                }}
+                                            >
                                                 <DeleteIcon />
                                             </IconButton>
                                         </Box>
@@ -106,12 +136,30 @@ export function VariationRow(props: VariationRowProps) {
                     <Box>
                         <Button
                             variant="contained"
-                            onClick={handleCloseEditor}
+                            onClick={() => {
+                                props.saveChange(
+                                    draftVariationList.name,
+                                    draftVariationList.values
+                                );
+                                setOpenEditor(false);
+                            }}
                             sx={{ mr: 3 }}
                         >
-                            Done
+                            Save
                         </Button>
-                        <Button variant="outlined" onClick={handleCloseEditor}>
+                        <Button
+                            variant="outlined"
+                            onClick={() => {
+                                if (props.name == "" && props.values.length == 0) {
+                                    props.deleteRow();
+                                } else {
+                                    setDraftVariation({
+                                        name: props.name,
+                                        values: props.values,
+                                    });
+                                }
+                            }}
+                        >
                             Cancel
                         </Button>
                     </Box>
@@ -129,7 +177,7 @@ export function VariationRow(props: VariationRowProps) {
                         <Box>
                             <Typography>{props.name}</Typography>
                             <Breadcrumbs>
-                                {values.map((value, index) => (
+                                {props.values.map((value, index) => (
                                     <Box key={index}>
                                         <Typography>{value}</Typography>
                                     </Box>
@@ -144,7 +192,10 @@ export function VariationRow(props: VariationRowProps) {
                             }}
                         >
                             <Box>
-                                <Button variant="outlined" onClick={handleOpenEditor}>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() => setOpenEditor(true)}
+                                >
                                     Edit
                                 </Button>
                             </Box>
