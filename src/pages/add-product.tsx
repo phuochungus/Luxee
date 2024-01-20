@@ -7,6 +7,7 @@ import {
     IconButton,
     List,
     ListItem,
+    Paper,
     Table,
     TableBody,
     TableCell,
@@ -136,7 +137,7 @@ export function AddProduct() {
                     >
                         <Typography>Description</Typography>
                         <IconButton onClick={handleAutoPressed} size="small">
-                            <AutoAwesomeOutlinedIcon />:
+                            <AutoAwesomeOutlinedIcon fontSize="small" />:
                         </IconButton>
                     </Box>
                     <TextField
@@ -354,7 +355,7 @@ export function AddProduct() {
                 </Box>
 
                 <Typography>Variants</Typography>
-                <List component="div" disablePadding>
+                <List disablePadding>
                     {product.variationLists.map((variant, index) => {
                         return (
                             <div key={index}>

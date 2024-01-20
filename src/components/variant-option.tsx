@@ -40,7 +40,7 @@ export function VariationRow(props: VariationRowProps) {
     };
 
     return (
-        <>
+        <Box>
             {openEditor ? (
                 <>
                     <Box sx={{ display: "flex" }}>
@@ -103,6 +103,18 @@ export function VariationRow(props: VariationRowProps) {
                             </Box>
                         </Box>
                     </Box>
+                    <Box>
+                        <Button
+                            variant="contained"
+                            onClick={handleCloseEditor}
+                            sx={{ mr: 3 }}
+                        >
+                            Done
+                        </Button>
+                        <Button variant="outlined" onClick={handleCloseEditor}>
+                            Cancel
+                        </Button>
+                    </Box>
                 </>
             ) : (
                 <>
@@ -140,6 +152,6 @@ export function VariationRow(props: VariationRowProps) {
                     </Box>
                 </>
             )}
-        </>
+        </Box>
     );
 }
