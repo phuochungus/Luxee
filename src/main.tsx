@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { AddProduct } from "@/pages";
-import { MiniDrawer } from "@/components";
+import { MiniDrawer, TextEditor } from "@/components";
 
 const router = createBrowserRouter([
     {
@@ -12,6 +12,10 @@ const router = createBrowserRouter([
     {
         path: "/products/new",
         element: <AddProduct />,
+    },
+    {
+        path: "/editor",
+        element: <TextEditor />,
     },
 ]);
 
