@@ -21,7 +21,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useEffect } from "react";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import { MiniDrawer, VariationRow } from "@/components";
+import { ClippedDrawer, TextEditor, VariationRow } from "@/components";
 
 interface Product {
     title: string;
@@ -108,10 +108,6 @@ export function AddProduct() {
     }, [product.variations]);
 
     useEffect(() => {
-        console.log(product.variants);
-    }, [product.variants]);
-
-    useEffect(() => {
         setProduct({
             ...product,
             variations: [
@@ -151,8 +147,8 @@ export function AddProduct() {
     };
 
     return (
-        <MiniDrawer>
-            <Container sx={{ display: "flex", flexDirection: "column" }}>
+        <ClippedDrawer>
+            <Container sx={{ display: "flex", flexDirection: "column", width: "70%" }}>
                 <Typography>Title</Typography>
                 <TextField
                     sx={{ mt: 0.5 }}
@@ -178,19 +174,7 @@ export function AddProduct() {
                             <AutoAwesomeOutlinedIcon fontSize="small" />:
                         </IconButton>
                     </Box>
-                    <TextField
-                        sx={{ mt: 0.5, width: "100%" }}
-                        multiline
-                        size="small"
-                        minRows={3}
-                        value={product.description}
-                        onChange={(e) =>
-                            setProduct({
-                                ...product,
-                                description: e.target.value,
-                            })
-                        }
-                    />
+                    <TextEditor />
                 </Box>
                 <Box sx={{ mt: 2 }}>
                     <Typography>Media</Typography>
@@ -513,6 +497,6 @@ export function AddProduct() {
                     </>
                 )}
             </Container>
-        </MiniDrawer>
+        </ClippedDrawer>
     );
 }

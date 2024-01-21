@@ -3,3 +3,4 @@ export * from "./variation-row";
 export * from "./variation-display-row";
 export * from "./variation-edit-row";
 export * from "./text-editor";
+export * from "./clipped-drawer";
