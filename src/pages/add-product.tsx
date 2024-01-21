@@ -23,28 +23,6 @@ import React, { useEffect } from "react";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { MiniDrawer, VariationRow } from "@/components";
 
-export interface Variation {
-    name: string;
-    values: string[];
-}
-
-export interface SelectedVariation {
-    name: string;
-    value: string;
-}
-
-interface Variant {
-    sku?: string;
-    barcode?: string;
-    price: string;
-    cost: string;
-    unavailable: string;
-    commited: string;
-    available: string;
-    media?: FileList;
-    selectedVariations: SelectedVariation[];
-}
-
 interface Product {
     title: string;
     description: string;
@@ -59,6 +37,28 @@ interface Product {
     available: string;
     variations: Variation[];
     variants: Variant[];
+}
+
+export interface Variation {
+    name: string;
+    values: string[];
+}
+
+interface Variant {
+    sku?: string;
+    barcode?: string;
+    price: string;
+    cost: string;
+    unavailable: string;
+    commited: string;
+    available: string;
+    media?: FileList;
+    selectedVariations: SelectedVariation[];
+}
+
+export interface SelectedVariation {
+    name: string;
+    value: string;
 }
 
 export interface VariationListContextProps {
