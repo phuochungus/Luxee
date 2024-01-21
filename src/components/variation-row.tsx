@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React from "react";
-import { VariationList } from "../pages/add-product";
+import { VariationList } from "@/pages";
 
 interface VariationRowProps extends VariationList {
     index: number;

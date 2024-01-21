@@ -15,14 +15,13 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import MiniDrawer from "../components/drawer";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useEffect } from "react";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import { VariationRow } from "../components/variation-row";
+import { MiniDrawer, VariationRow } from "@/components";
 
 export interface VariationList {
     name: string;
