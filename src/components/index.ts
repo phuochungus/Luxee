@@ -1,2 +1,2 @@
-export * from "./drawer";
+export * from "./mini-drawer";
 export * from "./variation-row";

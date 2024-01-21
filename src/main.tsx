@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { MiniDrawer } from "@/components";
 import { AddProduct } from "@/pages";
+import { MiniDrawer } from "@/components";
 
 const router = createBrowserRouter([
     {
