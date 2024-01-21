@@ -23,7 +23,7 @@ import React, { useEffect } from "react";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { MiniDrawer, VariationRow } from "@/components";
 
-export interface VariationList {
+export interface Variation {
     name: string;
     values: string[];
 }
@@ -57,13 +57,13 @@ interface Product {
     unavailable: string;
     commited: string;
     available: string;
-    variationLists: VariationList[];
+    variations: Variation[];
     variants: Variant[];
 }
 
 export interface VariationListContextProps {
-    variationLists: VariationList[];
-    setVariationLists: (arr: VariationList[]) => void;
+    variationLists: Variation[];
+    setVariationLists: (arr: Variation[]) => void;
 }
 
 export const VariationListContext = React.createContext<VariationListContextProps>({
@@ -78,22 +78,22 @@ export function AddProduct() {
         price: "0",
         cost: "0",
         variants: [],
-        variationLists: [],
+        variations: [],
         unavailable: "0",
         available: "0",
         commited: "0",
     });
 
     useEffect(() => {
-        if (product.variationLists.length == 0) {
+        if (product.variations.length == 0) {
             setProduct({ ...product, variants: [] });
             return;
         }
-        const combinations = getAllCombinations(product.variationLists);
+        const combinations = getAllCombinations(product.variations);
         const variants = combinations.map((combination) => {
             const selectedVariations = combination.map((value, index) => {
                 return {
-                    name: product.variationLists[index].name,
+                    name: product.variations[index].name,
                     value: value,
                 };
             });
@@ -110,7 +110,7 @@ export function AddProduct() {
             };
         });
         setProduct({ ...product, variants: variants });
-    }, [product.variationLists]);
+    }, [product.variations]);
 
     useEffect(() => {
         console.log(product.variants);
@@ -119,7 +119,7 @@ export function AddProduct() {
     useEffect(() => {
         setProduct({
             ...product,
-            variationLists: [
+            variations: [
                 {
                     name: "Color",
                     values: ["Red", "Blue", "Green"],
@@ -142,7 +142,7 @@ export function AddProduct() {
         setShowGenerateText((showGenerateText) => !showGenerateText);
     };
 
-    const getAllCombinations = (variants: VariationList[]): string[][] => {
+    const getAllCombinations = (variants: Variation[]): string[][] => {
         if (variants.length == 1) return variants[0].values.map((value) => [value]);
         const cartesian = (...a: any) => {
             return a.reduce((a: any, b: any) =>
@@ -159,9 +159,9 @@ export function AddProduct() {
         <MiniDrawer>
             <VariationListContext.Provider
                 value={{
-                    variationLists: product.variationLists,
-                    setVariationLists: (arr: VariationList[]) => {
-                        setProduct({ ...product, variationLists: arr });
+                    variationLists: product.variations,
+                    setVariationLists: (arr: Variation[]) => {
+                        setProduct({ ...product, variations: arr });
                     },
                 }}
             >
@@ -232,7 +232,7 @@ export function AddProduct() {
                         </Box>
                     </Box>
                     <Box sx={{ my: 2 }}>
-                        {product.variationLists.length == 0 && (
+                        {product.variations.length == 0 && (
                             <>
                                 <Typography>Pricing</Typography>
                                 <Box sx={{ mt: 1 }}>
@@ -407,25 +407,23 @@ export function AddProduct() {
 
                     <Typography>Variants</Typography>
                     <List component={Box} disablePadding>
-                        {product.variationLists.map((variation, index) => {
+                        {product.variations.map((variation, index) => {
                             return (
                                 <div key={variation.name}>
                                     <Divider />
                                     <ListItem>
                                         <Box sx={{ width: "100%" }}>
                                             <VariationRow
-                                                index={index}
-                                                name={variation.name}
-                                                values={variation.values}
+                                                variation={variation}
                                                 openEditor={
                                                     variation.name == "" &&
                                                     variation.values.length == 0
                                                 }
-                                                saveChange={(name, values) => {
+                                                setVariation={(name, values) => {
                                                     setProduct({
                                                         ...product,
-                                                        variationLists:
-                                                            product.variationLists.map(
+                                                        variations:
+                                                            product.variations.map(
                                                                 (e, i) => {
                                                                     if (i == index) {
                                                                         return {
@@ -439,11 +437,11 @@ export function AddProduct() {
                                                             ),
                                                     });
                                                 }}
-                                                deleteRow={() => {
+                                                deleteVariation={() => {
                                                     setProduct({
                                                         ...product,
-                                                        variationLists:
-                                                            product.variationLists.filter(
+                                                        variations:
+                                                            product.variations.filter(
                                                                 (_, i) => i != index
                                                             ),
                                                     });
@@ -467,8 +465,8 @@ export function AddProduct() {
                                 onClick={() => {
                                     setProduct({
                                         ...product,
-                                        variationLists: [
-                                            ...product.variationLists,
+                                        variations: [
+                                            ...product.variations,
                                             { name: "", values: [] },
                                         ],
                                     });
@@ -499,7 +497,7 @@ export function AddProduct() {
                                                     flexDirection={"row"}
                                                 >
                                                     Variant (
-                                                    {product.variationLists
+                                                    {product.variations
                                                         .map((a) => a.name)
                                                         .join("-")}
                                                     )
