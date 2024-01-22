@@ -1,27 +1,15 @@
-import {
-    Box,
-    Button,
-    Container,
-    Divider,
-    Grid,
-    IconButton,
-    List,
-    ListItem,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    TextField,
-    Typography,
-} from "@mui/material";
+import { Box, Button, Container, IconButton, TextField, Typography } from "@mui/material";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import EditIcon from "@mui/icons-material/Edit";
 import React, { useEffect } from "react";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import { ClippedDrawer, TextEditor, VariationRow } from "@/components";
+import {
+    ClippedDrawer,
+    InventoryCard,
+    PricingCard,
+    TextEditor,
+    VariantTable,
+    VariationList,
+} from "@/components";
 
 interface Product {
     title: string;
@@ -44,7 +32,7 @@ export interface Variation {
     values: string[];
 }
 
-interface Variant {
+export interface Variant {
     sku?: string;
     barcode?: string;
     price: string;
@@ -202,300 +190,20 @@ export function AddProduct() {
                         </Button>
                     </Box>
                 </Box>
-                <Box sx={{ my: 2 }}>
-                    {product.variations.length == 0 && (
-                        <>
-                            <Typography>Pricing</Typography>
-                            <Box sx={{ mt: 1 }}>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={3} width={"auto"}>
-                                        <TextField
-                                            label="Price"
-                                            size="small"
-                                            required
-                                            value={product.price}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    price: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3} width={"auto"}>
-                                        <TextField
-                                            label="Compare-at"
-                                            size="small"
-                                            defaultValue={"--"}
-                                            value={product.compareAt}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    compareAt: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={4} width={"auto"} />
-                                    <Grid item xs={3} width={"auto"}>
-                                        <TextField
-                                            label="Cost"
-                                            size="small"
-                                            value={product.cost}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    cost: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3} width={"auto"}>
-                                        <TextField
-                                            label="Profit"
-                                            size="small"
-                                            InputProps={{ readOnly: true }}
-                                            disabled
-                                            value={
-                                                parseFloat(product.price.toString()) -
-                                                parseFloat(product.cost.toString())
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3} width={"auto"}>
-                                        <TextField
-                                            label="Margin"
-                                            size="small"
-                                            InputProps={{ readOnly: true }}
-                                            disabled
-                                            value={
-                                                isNaN(
-                                                    (parseFloat(
-                                                        product.price.toString()
-                                                    ) -
-                                                        parseFloat(
-                                                            product.cost.toString()
-                                                        )) /
-                                                        parseFloat(
-                                                            product.price.toString()
-                                                        )
-                                                )
-                                                    ? "--"
-                                                    : `${(
-                                                          ((parseFloat(
-                                                              product.price.toString()
-                                                          ) -
-                                                              parseFloat(
-                                                                  product.cost.toString()
-                                                              )) /
-                                                              parseFloat(
-                                                                  product.price.toString()
-                                                              )) *
-                                                          100
-                                                      ).toFixed(2)}%`
-                                            }
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                            <Typography sx={{ mt: 2, mb: 1 }}>Inventory</Typography>
-                            <Box>
-                                <Grid container spacing={2} columnSpacing={1}>
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label="SKU"
-                                            size="small"
-                                            value={product.sku}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    sku: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <TextField label="Barcode" size="small" />
-                                    </Grid>
-                                    <Grid item xs={6} />
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label="Unavailable"
-                                            size="small"
-                                            value={product.unavailable}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    unavailable: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label="Commited"
-                                            size="small"
-                                            value={product.commited}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    commited: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label="Available"
-                                            size="small"
-                                            value={product.available}
-                                            onChange={(e) =>
-                                                setProduct({
-                                                    ...product,
-                                                    available: e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3}>
-                                        <TextField
-                                            label="On-hand"
-                                            size="small"
-                                            InputProps={{ readOnly: true }}
-                                            disabled
-                                            value={
-                                                +product.available +
-                                                +product.unavailable +
-                                                +product.commited
-                                            }
-                                        />
-                                    </Grid>
-                                </Grid>
-                            </Box>
-                        </>
-                    )}
-                </Box>
-
-                <Typography>Variants</Typography>
-                <List component={Box} disablePadding>
-                    {product.variations.map((variation, index) => {
-                        return (
-                            <div key={variation.name}>
-                                <Divider />
-                                <ListItem>
-                                    <Box sx={{ width: "100%" }}>
-                                        <VariationRow
-                                            variation={variation}
-                                            openEditor={
-                                                variation.name == "" &&
-                                                variation.values.length == 0
-                                            }
-                                            setVariation={(name, values) => {
-                                                setProduct({
-                                                    ...product,
-                                                    variations: product.variations.map(
-                                                        (e, i) => {
-                                                            if (i == index) {
-                                                                return {
-                                                                    name: name,
-                                                                    values: values,
-                                                                };
-                                                            } else {
-                                                                return e;
-                                                            }
-                                                        }
-                                                    ),
-                                                });
-                                            }}
-                                            deleteVariation={() => {
-                                                setProduct({
-                                                    ...product,
-                                                    variations: product.variations.filter(
-                                                        (_, i) => i != index
-                                                    ),
-                                                });
-                                            }}
-                                        />
-                                    </Box>
-                                </ListItem>
-                            </div>
-                        );
-                    })}
-                    <Divider />
-                    <ListItem>
-                        <Typography
-                            sx={{
-                                color: "blue",
-                                cursor: "pointer",
-                                ":hover": {
-                                    textDecoration: "underline",
-                                },
-                            }}
-                            onClick={() => {
-                                setProduct({
-                                    ...product,
-                                    variations: [
-                                        ...product.variations,
-                                        { name: "", values: [] },
-                                    ],
-                                });
-                            }}
-                        >
-                            + Add more...
-                        </Typography>
-                    </ListItem>
-                </List>
-                {product.variants && (
-                    <>
-                        <Box>
-                            <Table>
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell width={2}>
-                                            <Box display={"flex"} flexDirection={"row"}>
-                                                No.
-                                                <TableSortLabel />
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Box display={"flex"} flexDirection={"row"}>
-                                                Variant (
-                                                {product.variations
-                                                    .map((a) => a.name)
-                                                    .join("-")}
-                                                )
-                                                <TableSortLabel />
-                                            </Box>
-                                        </TableCell>
-                                        <TableCell align="right">Action</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {product.variants.map((variant, index) => (
-                                        <TableRow key={index}>
-                                            <TableCell>{index + 1}</TableCell>
-                                            <TableCell>
-                                                {variant.selectedVariations
-                                                    .map((e) => e.value)
-                                                    .join(" / ")}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                <Box>
-                                                    <IconButton>
-                                                        <VisibilityOffIcon />
-                                                    </IconButton>
-                                                    <IconButton>
-                                                        <EditIcon />
-                                                    </IconButton>
-                                                </Box>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Box>
-                    </>
+                {product.variations.length == 0 && (
+                    <Box sx={{ my: 2 }}>
+                        <PricingCard product={product} setProduct={setProduct} />
+                        <InventoryCard product={product} setProduct={setProduct} />
+                    </Box>
                 )}
+
+                <Box sx={{ my: 2 }}>
+                    <Typography>Variations</Typography>
+                    <Box sx={{ mb: 1 }}>
+                        <VariationList product={product} setProduct={setProduct} />
+                    </Box>
+                    {product.variants && <VariantTable product={product} />}
+                </Box>
             </Container>
         </ClippedDrawer>
     );
