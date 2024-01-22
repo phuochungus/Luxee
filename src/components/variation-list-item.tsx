@@ -1,7 +1,7 @@
 import React from "react";
 import { Variation } from "@/pages";
-import { VariationDisplayRow } from "@/components/variation-display-row";
-import { VariationEditRow } from "@/components/variation-edit-row";
+import { VariationListItemDisplay } from "@/components/variation-display-row";
+import { VariationListItemEdit } from "@/components/variation-list-item-edit";
 
 interface VariationRowProps {
     variation: Variation;
@@ -10,13 +10,13 @@ interface VariationRowProps {
     deleteVariation: () => void;
 }
 
-export function VariationRow(props: VariationRowProps) {
+export function VariationListItem(props: VariationRowProps) {
     const [openEditor, setOpenEditor] = React.useState(props.openEditor ?? false);
 
     return (
         <>
             {openEditor ? (
-                <VariationEditRow
+                <VariationListItemEdit
                     variation={props.variation}
                     deleteVariation={props.deleteVariation}
                     setVariation={props.setVariation}
@@ -25,7 +25,7 @@ export function VariationRow(props: VariationRowProps) {
                     }}
                 />
             ) : (
-                <VariationDisplayRow
+                <VariationListItemDisplay
                     variation={props.variation}
                     openEditor={() => {
                         setOpenEditor(true);

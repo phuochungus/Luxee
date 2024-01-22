@@ -6,7 +6,7 @@ interface VariationDisplayRowProps {
     openEditor: () => void;
 }
 
-export function VariationDisplayRow(props: VariationDisplayRowProps) {
+export function VariationListItemDisplay(props: VariationDisplayRowProps) {
     return (
         <Box
             sx={{

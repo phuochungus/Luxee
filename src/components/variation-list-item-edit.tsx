@@ -10,7 +10,7 @@ interface VariationEditRowProps {
     closeEditor: () => void;
 }
 
-export function VariationEditRow(props: VariationEditRowProps) {
+export function VariationListItemEdit(props: VariationEditRowProps) {
     const [focusIndex, setFocusIndex] = React.useState(-1);
     const [name, setName] = React.useState(props.variation.name);
     const [values, setValues] = React.useState(props.variation.values);

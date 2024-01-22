@@ -1,4 +1,4 @@
-import { VariationRow } from "@/components";
+import { VariationListItem } from "@/components";
 import { Variation } from "@/pages";
 import { Box, Divider, List, ListItem, Typography } from "@mui/material";
 
@@ -15,7 +15,7 @@ export function VariationList(props: any) {
                                     width: "100%",
                                 }}
                             >
-                                <VariationRow
+                                <VariationListItem
                                     variation={variation}
                                     openEditor={
                                         variation.name == "" &&
