@@ -136,7 +136,7 @@ export function AddProduct() {
 
     return (
         <ClippedDrawer>
-            <Container sx={{ display: "flex", flexDirection: "column", width: "70%" }}>
+            <Container sx={{ display: "flex", flexDirection: "column", width: "80%" }}>
                 <Typography>Title</Typography>
                 <TextField
                     sx={{ mt: 0.5 }}
