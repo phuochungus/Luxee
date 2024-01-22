@@ -11,6 +11,8 @@ import {
     VariationList,
 } from "@/components";
 
+import cartesian from "cartesian";
+
 interface Product {
     title: string;
     description: string;
@@ -72,27 +74,31 @@ export function AddProduct() {
             setProduct({ ...product, variants: [] });
             return;
         }
-        const combinations = getAllCombinations(product.variations);
-        const variants = combinations.map((combination) => {
-            const selectedVariations = combination.map((value, index) => {
+
+        const filterEmptyVariations = product.variations.filter(
+            (array) => array.values.length > 0
+        );
+        const onlyValuesArray = filterEmptyVariations.map((array) => array.values);
+        const cartesianProduct = cartesian(onlyValuesArray);
+
+        const newVariants = cartesianProduct.map((array: string[]) => {
+            const selectedVariations = array.map((value, index) => {
                 return {
-                    name: product.variations[index].name,
-                    value: value,
+                    name: filterEmptyVariations[index].name,
+                    value,
                 };
             });
             return {
-                sku: product.sku,
-                barcode: product.barcode,
+                selectedVariations,
                 price: product.price,
                 cost: product.cost,
                 unavailable: product.unavailable,
-                commited: product.commited,
                 available: product.available,
-                media: product.media,
-                selectedVariations: selectedVariations,
+                commited: product.commited,
             };
         });
-        setProduct({ ...product, variants: variants });
+
+        setProduct({ ...product, variants: newVariants });
     }, [product.variations]);
 
     useEffect(() => {
@@ -119,19 +125,6 @@ export function AddProduct() {
 
     const handleAutoPressed = () => {
         setShowGenerateText((showGenerateText) => !showGenerateText);
-    };
-
-    const getAllCombinations = (variants: Variation[]): string[][] => {
-        if (variants.length == 1) return variants[0].values.map((value) => [value]);
-        const cartesian = (...a: any) => {
-            return a.reduce((a: any, b: any) =>
-                a.flatMap((d: any) => b.map((e: any) => [d, e].flat()))
-            );
-        };
-
-        const variantValues = variants.map((variant) => variant.values);
-        const variantCombinations = cartesian(...variantValues);
-        return variantCombinations;
     };
 
     return (
