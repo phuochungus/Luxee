@@ -9,3 +9,4 @@ export * from "./inventory-card";
 export * from "./variant-table";
 export * from "./variation-list";
 export * from "./media-upload-input";
+export * from "./media-upload-list";
