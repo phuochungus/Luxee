@@ -1,22 +1,21 @@
-import { Box, Button, Container, IconButton, TextField, Typography } from "@mui/material";
+import { Box, Container, IconButton, TextField, Typography } from "@mui/material";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import React, { useEffect } from "react";
 import {
     ClippedDrawer,
     InventoryCard,
+    MediaUploadInput,
     PricingCard,
     TextEditor,
     VariantTable,
     VariationList,
 } from "@/components";
-
 import cartesian from "cartesian";
 
-interface Product {
+export interface Product {
     title: string;
     description: string;
-    media?: FileList;
+    media: File[];
     price: string;
     compareAt?: string;
     cost: string;
@@ -42,7 +41,7 @@ export interface Variant {
     unavailable: string;
     commited: string;
     available: string;
-    media?: FileList;
+    media?: File[];
     selectedVariations: SelectedVariation[];
 }
 
@@ -60,6 +59,7 @@ export function AddProduct() {
     const [product, setProduct] = React.useState<Product>({
         title: "",
         description: "",
+        media: [],
         price: "0",
         cost: "0",
         variants: [],
@@ -80,8 +80,7 @@ export function AddProduct() {
         );
         const onlyValuesArray = filterEmptyVariations.map((array) => array.values);
         const cartesianProduct = cartesian(onlyValuesArray);
-
-        const newVariants = cartesianProduct.map((array: string[]) => {
+        const variants = cartesianProduct.map((array: string[]) => {
             const selectedVariations = array.map((value, index) => {
                 return {
                     name: filterEmptyVariations[index].name,
@@ -98,7 +97,7 @@ export function AddProduct() {
             };
         });
 
-        setProduct({ ...product, variants: newVariants });
+        setProduct({ ...product, variants: variants });
     }, [product.variations]);
 
     useEffect(() => {
@@ -159,29 +158,7 @@ export function AddProduct() {
                 </Box>
                 <Box sx={{ mt: 2 }}>
                     <Typography>Media</Typography>
-                    <Box sx={{ mt: 0.5 }}>
-                        <Button
-                            component="label"
-                            variant="contained"
-                            startIcon={<CloudUploadIcon />}
-                        >
-                            Upload media
-                            <input
-                                type="file"
-                                accept="video/*,image/*"
-                                multiple
-                                hidden
-                                onChange={(e) =>
-                                    setProduct({
-                                        ...product,
-                                        ...(e.target.files
-                                            ? { media: e.target.files }
-                                            : null),
-                                    })
-                                }
-                            />
-                        </Button>
-                    </Box>
+                    <MediaUploadInput product={product} setProduct={setProduct} />
                 </Box>
                 {product.variations.length == 0 && (
                     <Box sx={{ my: 2 }}>

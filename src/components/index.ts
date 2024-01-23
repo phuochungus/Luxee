@@ -8,3 +8,4 @@ export * from "./pricing-card";
 export * from "./inventory-card";
 export * from "./variant-table";
 export * from "./variation-list";
+export * from "./media-upload-input";
