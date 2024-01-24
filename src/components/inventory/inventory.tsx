@@ -10,12 +10,12 @@ export function Inventory(props: InventoryCardProps) {
         <div>
             <h5>Inventory</h5>
             <div>
-                <div className="row">
+                <div className="row mb-2">
                     <div className="col-3">
                         <label>SKU</label>
                         <input
                             type="text"
-                            className="form-control mb-2"
+                            className="form-control"
                             value={props.product.sku}
                             onChange={(e) =>
                                 props.setProduct({
@@ -47,11 +47,11 @@ export function Inventory(props: InventoryCardProps) {
                         <input
                             type="number"
                             className="form-control"
-                            value={props.product.unavailable}
+                            defaultValue={props.product.unavailable}
                             onChange={(e) =>
                                 props.setProduct({
                                     ...props.product,
-                                    unavailable: e.target.value,
+                                    unavailable: +e.target.value,
                                 })
                             }
                         />
@@ -61,11 +61,11 @@ export function Inventory(props: InventoryCardProps) {
                         <input
                             type="number"
                             className="form-control"
-                            value={props.product.commited}
+                            defaultValue={props.product.commited}
                             onChange={(e) =>
                                 props.setProduct({
                                     ...props.product,
-                                    commited: e.target.value,
+                                    commited: +e.target.value,
                                 })
                             }
                         />
@@ -75,11 +75,11 @@ export function Inventory(props: InventoryCardProps) {
                         <input
                             type="number"
                             className="form-control"
-                            value={props.product.available}
+                            defaultValue={props.product.available}
                             onChange={(e) =>
                                 props.setProduct({
                                     ...props.product,
-                                    available: e.target.value,
+                                    available: +e.target.value,
                                 })
                             }
                         />

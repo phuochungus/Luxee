@@ -1,7 +1,5 @@
-import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 import {
-    SideBar,
     Inventory,
     MediaUpload,
     Pricing,
@@ -16,14 +14,14 @@ export interface Product {
     title: string;
     description: string;
     media: File[];
-    price: string;
-    compareAt?: string;
-    cost: string;
+    price: number;
+    compareAt?: number;
+    cost: number;
     sku?: string;
     barcode?: string;
-    unavailable: string;
-    commited: string;
-    available: string;
+    unavailable: number;
+    commited: number;
+    available: number;
     variations: Variation[];
     variants: Variant[];
 }
@@ -36,11 +34,12 @@ export interface Variation {
 export interface Variant {
     sku?: string;
     barcode?: string;
-    price: string;
-    cost: string;
-    unavailable: string;
-    commited: string;
-    available: string;
+    price: number;
+    compareAt?: number;
+    cost: number;
+    unavailable: number;
+    commited: number;
+    available: number;
     media?: File[];
     selectedVariations: SelectedVariation[];
 }
@@ -60,13 +59,13 @@ export function Product() {
         title: "",
         description: "",
         media: [],
-        price: "0",
-        cost: "0",
+        price: 0,
+        cost: 0,
         variants: [],
         variations: [],
-        unavailable: "0",
-        available: "0",
-        commited: "0",
+        unavailable: 0,
+        available: 0,
+        commited: 0,
     });
 
     useEffect(() => {
@@ -94,31 +93,31 @@ export function Product() {
                 unavailable: product.unavailable,
                 available: product.available,
                 commited: product.commited,
-            };
+            } as Variant;
         });
 
         setProduct({ ...product, variants: variants });
     }, [product.variations]);
 
-    useEffect(() => {
-        setProduct({
-            ...product,
-            variations: [
-                {
-                    name: "Color",
-                    values: ["Red", "Blue", "Green"],
-                },
-                {
-                    name: "Size",
-                    values: ["S", "M", "L"],
-                },
-                {
-                    name: "Material",
-                    values: ["Cotton", "Polyester"],
-                },
-            ],
-        });
-    }, []);
+    // useEffect(() => {
+    //     setProduct({
+    //         ...product,
+    //         variations: [
+    //             {
+    //                 name: "Color",
+    //                 values: ["Red", "Blue", "Green"],
+    //             },
+    //             {
+    //                 name: "Size",
+    //                 values: ["S", "M", "L"],
+    //             },
+    //             {
+    //                 name: "Material",
+    //                 values: ["Cotton", "Polyester"],
+    //             },
+    //         ],
+    //     });
+    // }, []);
 
     const [showGenerateText, setShowGenerateText] = React.useState(false);
 
@@ -161,9 +160,14 @@ export function Product() {
 
                 <div className="mb-3">
                     <h5>Variations</h5>
-                    <VariationList product={product} setProduct={setProduct} />
+                    <VariationList
+                        variations={product.variations}
+                        setVariations={(variations: Variation[]) => {
+                            setProduct({ ...product, variations: variations });
+                        }}
+                    />
                 </div>
-                {product.variants && <VariantTable product={product} />}
+                {product.variants.length != 0 && <VariantTable product={product} />}
             </div>
         </>
     );

@@ -1,0 +1,4 @@
+#add-variation:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}

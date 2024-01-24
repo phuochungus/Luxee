@@ -1,9 +1,16 @@
-export function Pricing(props: any) {
+import { Product } from "@/pages";
+
+interface PricingProps {
+    product: Product;
+    setProduct: (product: Product) => void;
+}
+
+export function Pricing(props: PricingProps) {
     return (
         <div>
             <h5>Pricing</h5>
             <div>
-                <div className="row">
+                <div className="row mb-2">
                     <div className="col-3">
                         <label>Price*</label>
                         <div className="input-group">
@@ -12,11 +19,11 @@ export function Pricing(props: any) {
                                 type="number"
                                 className="form-control"
                                 required
-                                value={props.product.price}
+                                defaultValue={props.product.price}
                                 onChange={(e) =>
                                     props.setProduct({
                                         ...props.product,
-                                        price: e.target.value,
+                                        price: +e.target.value,
                                     })
                                 }
                             />
@@ -29,11 +36,11 @@ export function Pricing(props: any) {
                             <input
                                 type="number"
                                 className="form-control"
-                                value={props.product.compareAt}
+                                defaultValue={props.product.compareAt}
                                 onChange={(e) =>
                                     props.setProduct({
                                         ...props.product,
-                                        compareAt: e.target.value,
+                                        compareAt: +e.target.value,
                                     })
                                 }
                             />
@@ -48,11 +55,11 @@ export function Pricing(props: any) {
                             <input
                                 type="number"
                                 className="form-control"
-                                value={props.product.cost}
+                                defaultValue={props.product.cost}
                                 onChange={(e) =>
                                     props.setProduct({
                                         ...props.product,
-                                        cost: e.target.value,
+                                        cost: +e.target.value,
                                     })
                                 }
                             />
@@ -63,13 +70,14 @@ export function Pricing(props: any) {
                         <div className="input-group">
                             <span className="input-group-text">$</span>
                             <input
-                                type="number"
+                                type="string"
                                 className="form-control"
                                 readOnly
                                 disabled
                                 value={
-                                    parseFloat(props.product.price.toString()) -
-                                    parseFloat(props.product.cost.toString())
+                                    props.product.price == 0
+                                        ? "--"
+                                        : props.product.price - props.product.cost
                                 }
                             />
                         </div>
@@ -78,32 +86,22 @@ export function Pricing(props: any) {
                         <label>Margin</label>
                         <div className="input-group">
                             <input
-                                type="number"
+                                id="margin"
+                                type="string"
                                 className="form-control"
                                 readOnly
                                 disabled
                                 value={
-                                    isNaN(
-                                        (parseFloat(props.product.price.toString()) -
-                                            parseFloat(props.product.cost.toString())) /
-                                            parseFloat(props.product.price.toString())
-                                    )
-                                        ? "0"
-                                        : `${(
-                                              ((parseFloat(
-                                                  props.product.price.toString()
-                                              ) -
-                                                  parseFloat(
-                                                      props.product.cost.toString()
-                                                  )) /
-                                                  parseFloat(
-                                                      props.product.price.toString()
-                                                  )) *
+                                    props.product.price == 0
+                                        ? "--"
+                                        : (
+                                              ((props.product.price -
+                                                  props.product.cost) /
+                                                  props.product.price) *
                                               100
-                                          ).toFixed(2)}`
+                                          ).toFixed(2) + "%"
                                 }
                             />
-                            <span className="input-group-text">%</span>
                         </div>
                     </div>
                 </div>

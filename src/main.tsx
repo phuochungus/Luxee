@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Product } from "@/pages";
-import { TextEditor } from "@/components";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
