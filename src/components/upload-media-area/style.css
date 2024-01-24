@@ -1,0 +1,13 @@
+#drop-area {
+    height: 150px;
+    border: 2px dashed;
+    border-radius: 25px;
+}
+
+#drop-area:hover {
+    cursor: pointer;
+}
+
+#drop-area * {
+    pointer-events: none;
+}

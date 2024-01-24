@@ -3,7 +3,6 @@ import { Editor } from "@tinymce/tinymce-react";
 export function TextEditor() {
     return (
         <Editor
-
             apiKey="l8kc9p8z98af4d8pknzj21xy19a09u53gvinojn4yca3qty9"
             init={{
                 min_height: 200,

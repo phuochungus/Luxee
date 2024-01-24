@@ -16,7 +16,7 @@ import MailIcon from "@mui/icons-material/Mail";
 
 const drawerWidth = 240;
 
-export function ClippedDrawer({ children }: { children: React.ReactNode }) {
+export function SideBar({ children }: { children: React.ReactNode }) {
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />

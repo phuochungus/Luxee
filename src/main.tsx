@@ -1,21 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { AddProduct } from "@/pages";
-import { MiniDrawer, TextEditor } from "@/components";
+import { Product } from "@/pages";
+import { TextEditor } from "@/components";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./style.css";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <MiniDrawer />,
-    },
-    {
         path: "/products/new",
-        element: <AddProduct />,
-    },
-    {
-        path: "/editor",
-        element: <TextEditor />,
+        element: <Product />,
     },
 ]);
 

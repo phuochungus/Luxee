@@ -1,16 +1,16 @@
-import { Box, Container, IconButton, TextField, Typography } from "@mui/material";
-import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import { Box } from "@mui/material";
 import React, { useEffect } from "react";
 import {
-    ClippedDrawer,
-    InventoryCard,
+    SideBar,
+    Inventory,
     MediaUploadInput,
-    PricingCard,
+    Pricing,
     TextEditor,
     VariantTable,
     VariationList,
 } from "@/components";
 import cartesian from "cartesian";
+import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 
 export interface Product {
     title: string;
@@ -55,7 +55,7 @@ export interface VariationListContextProps {
     setVariationLists: (arr: Variation[]) => void;
 }
 
-export function AddProduct() {
+export function Product() {
     const [product, setProduct] = React.useState<Product>({
         title: "",
         description: "",
@@ -100,25 +100,25 @@ export function AddProduct() {
         setProduct({ ...product, variants: variants });
     }, [product.variations]);
 
-    useEffect(() => {
-        setProduct({
-            ...product,
-            variations: [
-                {
-                    name: "Color",
-                    values: ["Red", "Blue", "Green"],
-                },
-                {
-                    name: "Size",
-                    values: ["S", "M", "L"],
-                },
-                {
-                    name: "Material",
-                    values: ["Cotton", "Polyester"],
-                },
-            ],
-        });
-    }, []);
+    // useEffect(() => {
+    //     setProduct({
+    //         ...product,
+    //         variations: [
+    //             {
+    //                 name: "Color",
+    //                 values: ["Red", "Blue", "Green"],
+    //             },
+    //             {
+    //                 name: "Size",
+    //                 values: ["S", "M", "L"],
+    //             },
+    //             {
+    //                 name: "Material",
+    //                 values: ["Cotton", "Polyester"],
+    //             },
+    //         ],
+    //     });
+    // }, []);
 
     const [showGenerateText, setShowGenerateText] = React.useState(false);
 
@@ -127,54 +127,39 @@ export function AddProduct() {
     };
 
     return (
-        <ClippedDrawer>
-            <Container sx={{ display: "flex", flexDirection: "column", width: "80%" }}>
-                <Typography>Title</Typography>
-                <TextField
-                    sx={{ mt: 0.5 }}
-                    size="small"
-                    value={product.title}
-                    onChange={(e) =>
-                        setProduct({
-                            ...product,
-                            title: e.target.value,
-                        })
-                    }
-                />
-
-                <Box sx={{ mt: 2, width: "100%" }}>
-                    <Box
-                        display={"flex"}
-                        flexDirection={"row"}
-                        alignItems={"flex-end"}
-                        justifyContent={"space-between"}
-                    >
-                        <Typography>Description</Typography>
-                        <IconButton onClick={handleAutoPressed} size="small">
-                            <AutoAwesomeOutlinedIcon fontSize="small" />:
-                        </IconButton>
-                    </Box>
+        <>
+            <div className="container">
+                <div className="mb-3">
+                    <h5>Title</h5>
+                    <input type="text" className="form-control" />
+                </div>
+                <div className="mb-3">
+                    <div className="d-flex flex-row align-items-end justify-content-between">
+                        <h5>Description</h5>
+                        <button>
+                            <AutoAwesomeOutlinedIcon />
+                        </button>
+                    </div>
                     <TextEditor />
-                </Box>
-                <Box sx={{ mt: 2 }}>
-                    <Typography>Media</Typography>
+                </div>
+
+                <div className="mb-3">
+                    <h5>Media</h5>
                     <MediaUploadInput product={product} setProduct={setProduct} />
-                </Box>
+                </div>
                 {product.variations.length == 0 && (
-                    <Box sx={{ my: 2 }}>
-                        <PricingCard product={product} setProduct={setProduct} />
-                        <InventoryCard product={product} setProduct={setProduct} />
-                    </Box>
+                    <div className="mb-3">
+                        <Pricing product={product} setProduct={setProduct} />
+                        <Inventory product={product} setProduct={setProduct} />
+                    </div>
                 )}
 
-                <Box sx={{ my: 2 }}>
-                    <Typography>Variations</Typography>
-                    <Box sx={{ mb: 1 }}>
-                        <VariationList product={product} setProduct={setProduct} />
-                    </Box>
-                    {product.variants && <VariantTable product={product} />}
-                </Box>
-            </Container>
-        </ClippedDrawer>
+                <h5>Variations</h5>
+                <div>
+                    <VariationList product={product} setProduct={setProduct} />
+                </div>
+                {product.variants && <VariantTable product={product} />}
+            </div>
+        </>
     );
 }
