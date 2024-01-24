@@ -1,65 +1,59 @@
-import { Variant, Variation } from "@/pages";
-import {
-    Box,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableSortLabel,
-    TableBody,
-    IconButton,
-} from "@mui/material";
+import { Product, Variant, Variation } from "@/pages";
+import { IconButton } from "@mui/material";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditIcon from "@mui/icons-material/Edit";
 
-export function VariantTable(props: any) {
+interface VarianttableProps {
+    product: Product;
+}
+
+export function VarianTable(props: VarianttableProps) {
     return (
-        <Box>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell width={2}>
-                            <Box display={"flex"} flexDirection={"row"}>
-                                No.
-                                <TableSortLabel />
-                            </Box>
-                        </TableCell>
-                        <TableCell>
-                            <Box display={"flex"} flexDirection={"row"}>
-                                Variant (
-                                {props.product.variations
-                                    .map((a: Variation) => a.name)
-                                    .join("-")}
-                                )
-                                <TableSortLabel />
-                            </Box>
-                        </TableCell>
-                        <TableCell align="right">Action</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
+        <div>
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>
+                            Variant (
+                            {props.product.variations
+                                .map((a: Variation) => a.name)
+                                .join("-")}
+                            )
+                        </th>
+
+                        <th>Unavailable</th>
+                        <th>Commited</th>
+                        <th>Available</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     {props.product.variants.map((variant: Variant, index: number) => (
-                        <TableRow key={index}>
-                            <TableCell>{index + 1}</TableCell>
-                            <TableCell>
+                        <tr key={index}>
+                            <th>{index + 1}</th>
+                            <td>
                                 {variant.selectedVariations
                                     .map((e) => e.value)
                                     .join(" / ")}
-                            </TableCell>
-                            <TableCell align="right">
-                                <Box>
-                                    <IconButton>
-                                        <VisibilityOffIcon />
-                                    </IconButton>
-                                    <IconButton>
-                                        <EditIcon />
-                                    </IconButton>
-                                </Box>
-                            </TableCell>
-                        </TableRow>
+                            </td>
+                            <td>{variant.unavailable}</td>
+                            <td>{variant.commited}</td>
+                            <td>{variant.available}</td>
+                            <td>
+                                <div>
+                                    <button className="btn btn-outline-secondary me-1">
+                                        Hide
+                                    </button>
+                                    <button className="btn btn-outline-primary">
+                                        Edit
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     ))}
-                </TableBody>
-            </Table>
-        </Box>
+                </tbody>
+            </table>
+        </div>
     );
 }

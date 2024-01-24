@@ -1,12 +1,5 @@
 import React, { useEffect } from "react";
-import {
-    Inventory,
-    MediaUpload,
-    Pricing,
-    TextEditor,
-    VariantTable,
-    VariationList,
-} from "@/components";
+import { Inventory, MediaUpload, Pricing, TextEditor, VarianTable, VariationList } from "@/components";
 import cartesian from "cartesian";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 
@@ -99,25 +92,25 @@ export function Product() {
         setProduct({ ...product, variants: variants });
     }, [product.variations]);
 
-    // useEffect(() => {
-    //     setProduct({
-    //         ...product,
-    //         variations: [
-    //             {
-    //                 name: "Color",
-    //                 values: ["Red", "Blue", "Green"],
-    //             },
-    //             {
-    //                 name: "Size",
-    //                 values: ["S", "M", "L"],
-    //             },
-    //             {
-    //                 name: "Material",
-    //                 values: ["Cotton", "Polyester"],
-    //             },
-    //         ],
-    //     });
-    // }, []);
+    useEffect(() => {
+        setProduct({
+            ...product,
+            variations: [
+                {
+                    name: "Color",
+                    values: ["Red", "Blue", "Green"],
+                },
+                {
+                    name: "Size",
+                    values: ["S", "M", "L"],
+                },
+                {
+                    name: "Material",
+                    values: ["Cotton", "Polyester"],
+                },
+            ],
+        });
+    }, []);
 
     const [showGenerateText, setShowGenerateText] = React.useState(false);
 
@@ -126,49 +119,46 @@ export function Product() {
     };
 
     return (
-        <>
-            <div className="container">
-                <div className="mb-3">
-                    <h5>Title</h5>
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Give your product a title.."
-                    />
-                </div>
-                <div className="mb-3">
-                    <h5>Description</h5>
-                    <TextEditor />
-                    <button className="rounded-circle border-0 d-flex justify-content-center align-items-center bg-transparent">
-                        <AutoAwesomeOutlinedIcon fontSize="small" />
-                    </button>
-                </div>
-                <div className="mb-3">
-                    <h5>Media</h5>
-                    <MediaUpload product={product} setProduct={setProduct} />
-                </div>
-                {product.variations.length == 0 && (
-                    <>
-                        <div className="mb-3">
-                            <Pricing product={product} setProduct={setProduct} />
-                        </div>
-                        <div className="mb-3">
-                            <Inventory product={product} setProduct={setProduct} />
-                        </div>
-                    </>
-                )}
-
-                <div className="mb-3">
-                    <h5>Variations</h5>
-                    <VariationList
-                        variations={product.variations}
-                        setVariations={(variations: Variation[]) => {
-                            setProduct({ ...product, variations: variations });
-                        }}
-                    />
-                </div>
-                {product.variants.length != 0 && <VariantTable product={product} />}
+        <div className="container">
+            <div className="mb-3">
+                <h5>Title</h5>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Give your product a title.."
+                />
             </div>
-        </>
+            <div className="mb-3">
+                <h5>Description</h5>
+                <TextEditor />
+                <button className="rounded-circle border-0 d-flex justify-content-center align-items-center bg-transparent">
+                    <AutoAwesomeOutlinedIcon fontSize="small" />
+                </button>
+            </div>
+            <div className="mb-3">
+                <h5>Media</h5>
+                <MediaUpload product={product} setProduct={setProduct} />
+            </div>
+            {product.variations.length == 0 && (
+                <>
+                    <div className="mb-3">
+                        <Pricing product={product} setProduct={setProduct} />
+                    </div>
+                    <div className="mb-3">
+                        <Inventory product={product} setProduct={setProduct} />
+                    </div>
+                </>
+            )}
+            <div className="mb-3">
+                <h5>Variations</h5>
+                <VariationList
+                    variations={product.variations}
+                    setVariations={(variations: Variation[]) => {
+                        setProduct({ ...product, variations: variations });
+                    }}
+                />
+            </div>
+            {product.variants.length != 0 && <VarianTable product={product} />}
+        </div>
     );
 }

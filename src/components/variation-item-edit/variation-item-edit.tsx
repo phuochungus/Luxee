@@ -23,9 +23,7 @@ export function VariationListItemEdit(props: VariationEditRowProps) {
                             type="text"
                             className="form-control"
                             value={name}
-                            onChange={(e) => {
-                                setName(e.target.value);
-                            }}
+                            onChange={(e) => setName(e.target.value)}
                         />
                         <button
                             className="btn btn-outline-secondary"
@@ -54,20 +52,20 @@ export function VariationListItemEdit(props: VariationEditRowProps) {
                                     type="text"
                                     className="form-control mb-1"
                                     value={values[index]}
-                                    onChange={(e) => {
+                                    onChange={(e) =>
                                         setValues(
                                             values.map((value, i) =>
                                                 i == index ? e.target.value : value
                                             )
-                                        );
-                                    }}
+                                        )
+                                    }
                                     autoFocus={index == focusIndex}
                                 />
                                 <button
                                     className="btn btn-outline-secondary"
-                                    onClick={() => {
-                                        setValues(values.filter((_, i) => i != index));
-                                    }}
+                                    onClick={() =>
+                                        setValues(values.filter((_, i) => i != index))
+                                    }
                                     tabIndex={-1}
                                 >
                                     <svg

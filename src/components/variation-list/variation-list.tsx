@@ -12,22 +12,29 @@ export function VariationList(props: VariationListProps) {
     return (
         <ul className="list-group">
             {props.variations.map((variation: Variation, index: number) => (
-                <li className="list-group-item" key={variation.name}>
+                <li
+                    className="list-group-item list-group-item-action"
+                    key={variation.name}
+                >
                     <VariationListItem
                         variation={variation}
                         openEditor={variation.name == "" && variation.values.length == 0}
-                        setVariation={(name: string, values: string[]) => {
+                        setVariation={(name: string, values: string[]) =>
                             props.setVariations(
-                                props.variations.map((e: Variation, i: number) =>
-                                    i == index ? { name: name, values: values } : e
+                                props.variations.map((e: Variation) =>
+                                    e.name == variation.name
+                                        ? { name: name, values: values }
+                                        : e
                                 )
-                            );
-                        }}
-                        deleteVariation={() => {
+                            )
+                        }
+                        deleteVariation={() =>
                             props.setVariations(
-                                props.variations.filter((_: any, i: number) => i != index)
-                            );
-                        }}
+                                props.variations.filter(
+                                    (e: Variation) => e.name != variation.name
+                                )
+                            )
+                        }
                     />
                 </li>
             ))}
@@ -36,15 +43,15 @@ export function VariationList(props: VariationListProps) {
                 <span
                     id="add-variation"
                     className="text-primary"
-                    onClick={() => {
+                    onClick={() =>
                         props.setVariations([
                             ...props.variations,
                             {
                                 name: "",
                                 values: [],
                             },
-                        ]);
-                    }}
+                        ])
+                    }
                 >
                     + Add more...
                 </span>
