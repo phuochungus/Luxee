@@ -1,5 +1,5 @@
 export * from "./variation-list-item";
-export * from "./variation-display-row";
+export * from "./variation-list-item-display/variation-list-item-display";
 export * from "./variation-list-item-edit";
 export * from "./text-editor/text-editor";
 export * from "./sidebar/sidebar";
@@ -7,5 +7,5 @@ export * from "./pricing/pricing";
 export * from "./inventory/inventory";
 export * from "./variant-table";
 export * from "./variation-list";
-export * from "./upload-media-area/media-upload-area";
+export * from "./upload-media/media-upload";
 export * from "./media-upload-list";

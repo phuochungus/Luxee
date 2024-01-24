@@ -1,6 +1,6 @@
 import React from "react";
 import { Variation } from "@/pages";
-import { VariationListItemDisplay } from "@/components/variation-display-row";
+import { VariationListItemDisplay } from "@/components/variation-list-item-display/variation-list-item-display";
 import { VariationListItemEdit } from "@/components/variation-list-item-edit";
 
 interface VariationRowProps {

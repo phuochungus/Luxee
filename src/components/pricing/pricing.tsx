@@ -5,7 +5,7 @@ export function Pricing(props: any) {
             <div>
                 <div className="row">
                     <div className="col-3">
-                        <label>Price</label>
+                        <label>Price*</label>
                         <div className="input-group">
                             <span className="input-group-text">$</span>
                             <input

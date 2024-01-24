@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import {
     SideBar,
     Inventory,
-    MediaUploadInput,
+    MediaUpload,
     Pricing,
     TextEditor,
     VariantTable,
@@ -100,25 +100,25 @@ export function Product() {
         setProduct({ ...product, variants: variants });
     }, [product.variations]);
 
-    // useEffect(() => {
-    //     setProduct({
-    //         ...product,
-    //         variations: [
-    //             {
-    //                 name: "Color",
-    //                 values: ["Red", "Blue", "Green"],
-    //             },
-    //             {
-    //                 name: "Size",
-    //                 values: ["S", "M", "L"],
-    //             },
-    //             {
-    //                 name: "Material",
-    //                 values: ["Cotton", "Polyester"],
-    //             },
-    //         ],
-    //     });
-    // }, []);
+    useEffect(() => {
+        setProduct({
+            ...product,
+            variations: [
+                {
+                    name: "Color",
+                    values: ["Red", "Blue", "Green"],
+                },
+                {
+                    name: "Size",
+                    values: ["S", "M", "L"],
+                },
+                {
+                    name: "Material",
+                    values: ["Cotton", "Polyester"],
+                },
+            ],
+        });
+    }, []);
 
     const [showGenerateText, setShowGenerateText] = React.useState(false);
 
@@ -131,31 +131,36 @@ export function Product() {
             <div className="container">
                 <div className="mb-3">
                     <h5>Title</h5>
-                    <input type="text" className="form-control" />
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Give your product a title.."
+                    />
                 </div>
                 <div className="mb-3">
-                    <div className="d-flex flex-row align-items-end justify-content-between">
-                        <h5>Description</h5>
-                        <button>
-                            <AutoAwesomeOutlinedIcon />
-                        </button>
-                    </div>
+                    <h5>Description</h5>
                     <TextEditor />
+                    <button className="rounded-circle border-0 d-flex justify-content-center align-items-center bg-transparent">
+                        <AutoAwesomeOutlinedIcon fontSize="small" />
+                    </button>
                 </div>
-
                 <div className="mb-3">
                     <h5>Media</h5>
-                    <MediaUploadInput product={product} setProduct={setProduct} />
+                    <MediaUpload product={product} setProduct={setProduct} />
                 </div>
                 {product.variations.length == 0 && (
-                    <div className="mb-3">
-                        <Pricing product={product} setProduct={setProduct} />
-                        <Inventory product={product} setProduct={setProduct} />
-                    </div>
+                    <>
+                        <div className="mb-3">
+                            <Pricing product={product} setProduct={setProduct} />
+                        </div>
+                        <div className="mb-3">
+                            <Inventory product={product} setProduct={setProduct} />
+                        </div>
+                    </>
                 )}
 
-                <h5>Variations</h5>
-                <div>
+                <div className="mb-3">
+                    <h5>Variations</h5>
                     <VariationList product={product} setProduct={setProduct} />
                 </div>
                 {product.variants && <VariantTable product={product} />}

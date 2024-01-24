@@ -2,12 +2,12 @@ import React, { useRef } from "react";
 import { Product } from "@/pages";
 import "./style.css";
 
-interface MediaUploadInputProps {
+interface MediaUploadProps {
     product: Product;
     setProduct: (product: Product) => void;
 }
 
-export function MediaUploadInput(props: MediaUploadInputProps) {
+export function MediaUpload(props: MediaUploadProps) {
     const ref = useRef<HTMLInputElement>(null);
 
     const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +71,9 @@ export function MediaUploadInput(props: MediaUploadInputProps) {
                         <span>Upload files</span>
                     </div>
                 </button>
-                <p className="d-flex justify-content-center m-0">or drag and drop</p>
+                <p className="d-flex justify-content-center m-0">
+                    or drag and drop it here
+                </p>
             </div>
         </div>
     );
