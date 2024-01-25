@@ -11,14 +11,11 @@ interface VariationListProps {
 export function VariationList(props: VariationListProps) {
     return (
         <ul className="list-group">
-            {props.variations.map((variation: Variation, index: number) => (
-                <li
-                    className="list-group-item list-group-item-action"
-                    key={variation.name}
-                >
+            {props.variations.map((variation: Variation) => (
+                <li className="list-group-item" key={variation.name}>
                     <VariationListItem
                         variation={variation}
-                        openEditor={variation.name == "" && variation.values.length == 0}
+                        isToggle={variation.name == "" && variation.values.length == 0}
                         setVariation={(name: string, values: string[]) =>
                             props.setVariations(
                                 props.variations.map((e: Variation) =>
