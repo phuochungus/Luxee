@@ -6,3 +6,4 @@ export * from "./inventory/inventory";
 export * from "./variant-table";
 export * from "./variation-list/variation-list";
 export * from "./upload-media/media-upload";
+export * from "./collapse/collapse";
