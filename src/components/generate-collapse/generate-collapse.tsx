@@ -1,7 +1,29 @@
+import { Collapse } from "bootstrap";
+import { useEffect, useRef, useState } from "react";
+
 export function GenerateCollapse() {
+    const [toggle, setToggle] = useState<boolean>(false);
+    const refCollapse = useRef(null);
+
+    useEffect(() => {
+        if (refCollapse.current == null) return;
+        const collapse = new Collapse(refCollapse.current!, { toggle });
+        if (toggle) {
+            collapse.show();
+        } else {
+            collapse.hide();
+        }
+    }, [toggle]);
+
     return (
         <div>
-            <button className=" btn btn-outline-info btn-sm" type="button">
+            <button
+                className=" btn btn-outline-info btn-sm"
+                type="button"
+                onClick={() => {
+                    setToggle((toggle) => !toggle);
+                }}
+            >
                 <div className="d-flex align-items-center flex-wrap">
                     Try generate with AI (beta)
                     <svg
@@ -17,7 +39,7 @@ export function GenerateCollapse() {
                 </div>
             </button>
 
-            <div className="form-floating">
+            <div className="form-floating collapse" ref={refCollapse}>
                 <textarea
                     className="form-control"
                     placeholder="Leave a comment here"

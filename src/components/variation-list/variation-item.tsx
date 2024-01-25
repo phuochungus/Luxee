@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Variation } from "@/pages";
-import { Collapse as BootstrapCollapse } from "bootstrap";
+import { Collapse } from "bootstrap";
 
 interface VariationRowProps {
     variation: Variation;
@@ -19,7 +19,7 @@ export function VariationListItem(props: VariationRowProps) {
 
     useEffect(() => {
         if (refCollapse.current == null) return;
-        const collapse = new BootstrapCollapse(refCollapse.current!, { toggle });
+        const collapse = new Collapse(refCollapse.current!, { toggle });
         if (toggle) {
             collapse.show();
             nameRef.current?.focus();
