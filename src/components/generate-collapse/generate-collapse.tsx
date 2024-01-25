@@ -39,7 +39,7 @@ export function GenerateCollapse() {
                 </div>
             </button>
 
-            <div className="form-floating collapse" ref={refCollapse}>
+            <div className="form-floating collapse mt-3" ref={refCollapse}>
                 <textarea
                     className="form-control"
                     placeholder="Leave a comment here"
