@@ -27,11 +27,11 @@ export function VariationListItem(props: VariationRowProps) {
                     onClick={() => setOpenEditor(true)}
                 >
                     <div>
-                        <h6>{props.variation.name}</h6>
+                        <h6 className="mb-0">{props.variation.name}</h6>
                         <ol className="breadcrumb mb-0">
                             {props.variation.values.map((value) => (
                                 <li className="breadcrumb-item" key={value}>
-                                    {value}
+                                    <span>{value}</span>
                                 </li>
                             ))}
                         </ol>

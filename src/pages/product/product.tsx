@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Inventory, MediaUpload, Pricing, TextEditor, VarianTable, VariationList } from "@/components";
+import {
+    Inventory,
+    MediaUpload,
+    Pricing,
+    TextEditor,
+    VarianTable,
+    VariationList,
+} from "@/components";
 import cartesian from "cartesian";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 
