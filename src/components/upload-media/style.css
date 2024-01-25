@@ -11,3 +11,7 @@
 #drop-area * {
     pointer-events: none;
 }
+
+#delete-btn:hover {
+    cursor: pointer;
+}
