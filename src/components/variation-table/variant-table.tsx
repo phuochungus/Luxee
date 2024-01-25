@@ -1,7 +1,4 @@
 import { Product, Variant, Variation } from "@/pages";
-import { IconButton } from "@mui/material";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import EditIcon from "@mui/icons-material/Edit";
 
 interface VarianttableProps {
     product: Product;
@@ -42,10 +39,10 @@ export function VarianTable(props: VarianttableProps) {
                             <td>{variant.available}</td>
                             <td>
                                 <div>
-                                    <button className="btn btn-outline-secondary me-1">
+                                    <button className="btn btn-outline-secondary btn-sm me-1">
                                         Hide
                                     </button>
-                                    <button className="btn btn-outline-primary">
+                                    <button className="btn btn-outline-primary btn-sm">
                                         Edit
                                     </button>
                                 </div>
