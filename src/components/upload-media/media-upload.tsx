@@ -16,10 +16,24 @@ export function MediaUpload(props: MediaUploadProps) {
     const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             const files = Array.from(e.target.files);
-            // const media = [...props.product.media, ...files];
-            // props.setProduct({ ...props.product, media });
             setMedia([...media, ...files]);
         }
+    };
+
+    const dragFile = useRef<number>(-1);
+    const dragOverFile = useRef<number>(-1);
+    const handleSort = () => {
+        if (dragFile.current == -1 || dragOverFile.current == -1) return;
+        let newMedia = [...media];
+        newMedia = newMedia.filter((_, index) => index != dragFile.current);
+        newMedia = [
+            ...newMedia.slice(0, dragOverFile.current),
+            media[dragFile.current],
+            ...newMedia.slice(dragOverFile.current),
+        ];
+        setMedia(newMedia);
+        dragFile.current = -1;
+        dragOverFile.current = -1;
     };
 
     return (
@@ -85,7 +99,7 @@ export function MediaUpload(props: MediaUploadProps) {
             </div>
             {media.length != 0 && (
                 <div className="d-flex">
-                    {media.map((file) => (
+                    {media.map((file, index) => (
                         <div
                             className="card me-2"
                             key={file.name}
@@ -93,6 +107,16 @@ export function MediaUpload(props: MediaUploadProps) {
                                 width: "10rem",
                             }}
                             draggable
+                            onDragStart={(_) => {
+                                dragFile.current = index;
+                            }}
+                            onDragEnter={(_) => {
+                                dragOverFile.current = index;
+                            }}
+                            onDragEnd={handleSort}
+                            onDragOver={(e) => {
+                                e.preventDefault();
+                            }}
                         >
                             <ImagePreview file={file} />
                             <div className="px-2">
