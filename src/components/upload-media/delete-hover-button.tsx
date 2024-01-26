@@ -9,6 +9,11 @@ export function DeleteHoverButton({ onClick }: { onClick: () => void }) {
             onClick={onClick}
             onMouseOver={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
+            draggable
+            onDragStart={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            }}
         >
             {hover ? (
                 <i

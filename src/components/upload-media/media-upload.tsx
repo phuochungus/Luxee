@@ -84,14 +84,15 @@ export function MediaUpload(props: MediaUploadProps) {
                 </div>
             </div>
             {media.length != 0 && (
-                <>
+                <div className="d-flex">
                     {media.map((file) => (
                         <div
-                            className="card"
+                            className="card me-2"
                             key={file.name}
                             style={{
                                 width: "10rem",
                             }}
+                            draggable
                         >
                             <ImagePreview file={file} />
                             <div className="px-2">
@@ -117,7 +118,7 @@ export function MediaUpload(props: MediaUploadProps) {
                             </div>
                         </div>
                     ))}
-                </>
+                </div>
             )}
         </div>
     );
