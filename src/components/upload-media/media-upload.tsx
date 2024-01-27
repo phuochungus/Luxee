@@ -101,7 +101,7 @@ export function MediaUpload(props: MediaUploadProps) {
                 <div className="d-flex">
                     {media.map((file, index) => (
                         <div
-                            className="card me-2"
+                            className="card me-2 text-bg-light  p-1"
                             key={file.name}
                             style={{
                                 width: "10rem",
@@ -119,7 +119,7 @@ export function MediaUpload(props: MediaUploadProps) {
                             }}
                         >
                             <ImagePreview file={file} />
-                            <div className="px-2">
+                            <div>
                                 <p
                                     className="card-text overflow-hidden"
                                     style={{
