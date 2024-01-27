@@ -7,3 +7,4 @@ export * from "./variation-list/variation-list";
 export * from "./upload-media/media-upload";
 export * from "./generate-collapse/generate-collapse";
 export * from "./upload-media/delete-hover-button";
+export * from "./sidebar/sidebar";
