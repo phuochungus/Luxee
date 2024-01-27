@@ -91,10 +91,8 @@ export function MediaUpload(props: MediaUploadProps) {
                             </div>
                         </button>
                     </div>
-                    <p>or</p>
-                    <p className="d-flex justify-content-center m-0">
-                        drag and drop here
-                    </p>
+                    <span>or</span>
+                    <span>drag and drop here</span>
                 </div>
             </div>
             {media.length != 0 && (

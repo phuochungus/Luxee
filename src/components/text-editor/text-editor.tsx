@@ -7,7 +7,8 @@ export function TextEditor() {
             init={{
                 min_height: 200,
                 plugins:
-                    "list advlist autolink autoresize autosave charmap emoticons fullscreen help image link lists media nonbreaking pagebreak preview quickbars save searchreplace table visualblocks visualchars wordcount",
+                    "preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion",
+
                 toolbar:
                     "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
                 placeholder: "Descripe it here...",

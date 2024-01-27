@@ -6,7 +6,7 @@ export function Dashboard() {
     return (
         <body className="d-flex flex-row">
             <Sidebar />
-            <div className="px-5" style={{ width: "100%" }}>
+            <div className="px-4" style={{ width: "100%" }}>
                 <Product />
             </div>
         </body>

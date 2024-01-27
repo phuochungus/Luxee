@@ -1,7 +1,7 @@
 export function Sidebar() {
     return (
         <div
-            className="d-flex flex-column flex-shrink-0 p-3 bg-light"
+            className="d-flex flex-column flex-shrink-0 p-3 bg-light shadow"
             style={{ width: "280px", height: "100vh", position: "sticky", top: "0" }}
         >
             {/* <a
@@ -61,10 +61,7 @@ export function Sidebar() {
                     />
                     <strong>mdo</strong>
                 </a>
-                <ul
-                    className="dropdown-menu text-small shadow"
-                    aria-labelledby="dropdownUser2"
-                >
+                <ul className="dropdown-menu text-small shadow">
                     <li>
                         <a className="dropdown-item" href="#">
                             New project...

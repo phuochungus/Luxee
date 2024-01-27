@@ -126,15 +126,17 @@ export function Product() {
     };
 
     return (
-        <div className="container">
-            <div className="mb-3">
+        <div className="container shadow">
+            <div className="mb-3 ">
                 <h5>Title</h5>
                 <input
+                    required
                     autoFocus
                     type="text"
-                    className="form-control"
+                    className="form-control is-invalid"
                     placeholder="Give your product a title.."
                 />
+                <div className="invalid-feedback">Please provide a title</div>
             </div>
             <div className="mb-3">
                 <h5>Description</h5>
