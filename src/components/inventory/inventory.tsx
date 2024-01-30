@@ -54,7 +54,9 @@ export function Inventory() {
                         readOnly
                         disabled
                         value={
-                            watch("available") + watch("commited") + watch("unavailable")
+                            +watch("available") +
+                            +watch("commited") +
+                            +watch("unavailable")
                         }
                     />
                 </div>

@@ -2,7 +2,7 @@ import { Product } from "@/components";
 import { useFormContext } from "react-hook-form";
 
 export function Pricing() {
-    const { register, getValues } = useFormContext<Product>();
+    const { register, watch } = useFormContext<Product>();
     return (
         <div>
             <h5>Pricing</h5>
@@ -53,9 +53,9 @@ export function Pricing() {
                             readOnly
                             disabled
                             value={
-                                getValues("price") == 0 || isNaN(getValues("price"))
+                                watch("price") == 0 || isNaN(watch("price"))
                                     ? "--"
-                                    : getValues("price") - getValues("cost")
+                                    : watch("price") - watch("cost")
                             }
                         />
                     </div>
@@ -70,11 +70,11 @@ export function Pricing() {
                             readOnly
                             disabled
                             value={
-                                getValues("price") == 0 || isNaN(getValues("price"))
+                                watch("price") == 0 || isNaN(watch("price"))
                                     ? "--"
                                     : (
-                                          ((getValues("price") - getValues("cost")) /
-                                              getValues("price")) *
+                                          ((watch("price") - watch("cost")) /
+                                              watch("price")) *
                                           100
                                       ).toFixed(2) + "%"
                             }
