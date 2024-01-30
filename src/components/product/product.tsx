@@ -11,6 +11,7 @@ import {
 import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
+import { Try } from "@mui/icons-material";
 
 export interface Variant {
     sku?: string;
@@ -131,50 +132,71 @@ export function Product() {
         setShowGenerateText((showGenerateText) => !showGenerateText);
     };
 
-    const onSubmit: SubmitHandler<Product> = (data) => console.log(data);
+    const onSubmit: SubmitHandler<Product> = async (product) => {
+        try {
+        } catch (error) {}
+    };
 
     return (
         <FormProvider {...methods}>
-            <div className="container shadow">
-                <form noValidate>
-                    <div className="mb-3 ">
-                        <h5>Title</h5>
-                        <input
-                            required
-                            autoFocus
-                            type="text"
-                            className="form-control"
-                            placeholder="Give your product a title.."
-                        />
-                        <div className="invalid-feedback">Please provide a title</div>
-                    </div>
-                    <div className="mb-3">
-                        <h5>Description</h5>
-                        <TextEditor />
-                        <div className="mt-2">
-                            <GenerateCollapse />
-                        </div>
-                    </div>
-                    <div className="mb-3">
-                        <h5>Media</h5>
-                        <MediaUpload />
-                    </div>
-                    {watch("variants") && (
-                        <>
-                            <div className="mb-3">
-                                <Pricing />
+            <div>
+                <div
+                    className="py-1 mb-2 bg-secondary d-flex justify-content-end"
+                    style={{
+                        zIndex: 100,
+                        position: "sticky",
+                        top: "0",
+                    }}
+                >
+                    <button className="btn btn-light btn-sm">Preview</button>
+                    <button className="btn btn-primary btn-sm mx-3">Save</button>
+                </div>
+
+                <div className="px-4" style={{ width: "100%" }}>
+                    <div className="container shadow">
+                        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                            <div className="mb-3 ">
+                                <h5>Title</h5>
+                                <input
+                                    required
+                                    autoFocus
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Give your product a title.."
+                                />
+                                <div className="invalid-feedback">
+                                    Please provide a title
+                                </div>
                             </div>
                             <div className="mb-3">
-                                <Inventory />
+                                <h5>Description</h5>
+                                <TextEditor />
+                                <div className="mt-2">
+                                    <GenerateCollapse />
+                                </div>
                             </div>
-                        </>
-                    )}
-                    <div className="mb-3">
-                        <h5>Option</h5>
-                        <OptionList />
+                            <div className="mb-3">
+                                <h5>Media</h5>
+                                <MediaUpload />
+                            </div>
+                            {watch("variants") && (
+                                <>
+                                    <div className="mb-3">
+                                        <Pricing />
+                                    </div>
+                                    <div className="mb-3">
+                                        <Inventory />
+                                    </div>
+                                </>
+                            )}
+                            <div className="mb-3">
+                                <h5>Option</h5>
+                                <OptionList />
+                            </div>
+                            {watch("variants") && <VariantTable />}
+                        </form>
                     </div>
-                    {watch("variants") && <VariantTable />}
-                </form>
+                </div>
             </div>
         </FormProvider>
     );

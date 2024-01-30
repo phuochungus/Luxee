@@ -3,11 +3,14 @@ import "./style.css";
 
 export function Dashboard() {
     return (
-        <div className="d-flex flex-row">
+        <div
+            className="d-flex flex-row"
+            style={{
+                width: "100%",
+            }}
+        >
             <Sidebar />
-            <div className="px-4" style={{ width: "100%" }}>
-                <Product />
-            </div>
+            <Product />
         </div>
     );
 }

@@ -4,13 +4,6 @@ export function Sidebar() {
             className="d-flex flex-column flex-shrink-0 p-3 bg-light shadow"
             style={{ width: "280px", height: "100vh", position: "sticky", top: "0" }}
         >
-            {/* <a
-                href="/"
-                className="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none"
-            >
-                <svg className="bi me-2" width="40" height="32" />
-                <span className="fs-4">Sidebar</span>
-            </a> */}
             <ul className="nav nav-pills flex-column mb-auto">
                 <li className="nav-item">
                     <a href="#" className="nav-link active" aria-current="page">
