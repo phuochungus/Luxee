@@ -1,41 +1,22 @@
-import { Product } from "@/pages";
+import { Product } from "@/components";
+import { useFormContext } from "react-hook-form";
 
-interface InventoryCardProps {
-    product: Product;
-    setProduct: (product: Product) => void;
-}
-
-export function Inventory(props: InventoryCardProps) {
+export function Inventory() {
+    const { register, watch } = useFormContext<Product>();
     return (
         <div>
             <h5>Inventory</h5>
             <div className="row mb-2">
                 <div className="col-3">
                     <label>SKU</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={props.product.sku}
-                        onChange={(e) =>
-                            props.setProduct({
-                                ...props.product,
-                                sku: e.target.value,
-                            })
-                        }
-                    />
+                    <input type="text" className="form-control" {...register("sku")} />
                 </div>
                 <div className="col-3">
                     <label htmlFor="">Barcode</label>
                     <input
                         type="text"
                         className="form-control"
-                        value={props.product.barcode}
-                        onChange={(e) =>
-                            props.setProduct({
-                                ...props.product,
-                                barcode: e.target.value,
-                            })
-                        }
+                        {...register("barcode")}
                     />
                 </div>
                 <div className="col-6" />
@@ -46,13 +27,7 @@ export function Inventory(props: InventoryCardProps) {
                     <input
                         type="number"
                         className="form-control"
-                        defaultValue={props.product.unavailable}
-                        onChange={(e) =>
-                            props.setProduct({
-                                ...props.product,
-                                unavailable: +e.target.value,
-                            })
-                        }
+                        {...register("unavailable")}
                     />
                 </div>
                 <div className="col-3">
@@ -60,13 +35,7 @@ export function Inventory(props: InventoryCardProps) {
                     <input
                         type="number"
                         className="form-control"
-                        defaultValue={props.product.commited}
-                        onChange={(e) =>
-                            props.setProduct({
-                                ...props.product,
-                                commited: +e.target.value,
-                            })
-                        }
+                        {...register("commited")}
                     />
                 </div>
                 <div className="col-3">
@@ -74,13 +43,7 @@ export function Inventory(props: InventoryCardProps) {
                     <input
                         type="number"
                         className="form-control"
-                        defaultValue={props.product.available}
-                        onChange={(e) =>
-                            props.setProduct({
-                                ...props.product,
-                                available: +e.target.value,
-                            })
-                        }
+                        {...register("available")}
                     />
                 </div>
                 <div className="col-3">
@@ -91,9 +54,7 @@ export function Inventory(props: InventoryCardProps) {
                         readOnly
                         disabled
                         value={
-                            +props.product.available +
-                            +props.product.unavailable +
-                            +props.product.commited
+                            watch("available") + watch("commited") + watch("unavailable")
                         }
                     />
                 </div>

@@ -1,10 +1,9 @@
-import { Product, Variant, Variation } from "@/pages";
+import { Product } from "@/components";
+import { useFormContext } from "react-hook-form";
 
-interface VarianttableProps {
-    product: Product;
-}
+export function VariantTable() {
+    const { getValues } = useFormContext<Product>();
 
-export function VarianTable(props: VarianttableProps) {
     return (
         <div>
             <table className="table table-striped">
@@ -13,8 +12,8 @@ export function VarianTable(props: VarianttableProps) {
                         <th>#</th>
                         <th>
                             Variant (
-                            {props.product.variations
-                                .map((a: Variation) => a.name)
+                            {getValues("options")
+                                .map((a) => a.name)
                                 .join("-")}
                             )
                         </th>
@@ -26,12 +25,12 @@ export function VarianTable(props: VarianttableProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.product.variants.map((variant: Variant, index: number) => (
+                    {getValues("variants").map((variant, index: number) => (
                         <tr key={index}>
                             <th>{index + 1}</th>
                             <td>
                                 {variant.selectedVariations
-                                    .map((e) => e.value)
+                                    .map((a) => a.value)
                                     .join(" / ")}
                             </td>
                             <td>{variant.unavailable}</td>

@@ -1,11 +1,8 @@
-import { Product } from "@/pages";
+import { Product } from "@/components";
+import { useFormContext } from "react-hook-form";
 
-interface PricingProps {
-    product: Product;
-    setProduct: (product: Product) => void;
-}
-
-export function Pricing(props: PricingProps) {
+export function Pricing() {
+    const { register, getValues } = useFormContext<Product>();
     return (
         <div>
             <h5>Pricing</h5>
@@ -18,13 +15,7 @@ export function Pricing(props: PricingProps) {
                             type="number"
                             className="form-control"
                             required
-                            defaultValue={props.product.price}
-                            onChange={(e) =>
-                                props.setProduct({
-                                    ...props.product,
-                                    price: +e.target.value,
-                                })
-                            }
+                            {...register("price", { valueAsNumber: true })}
                         />
                     </div>
                 </div>
@@ -35,13 +26,7 @@ export function Pricing(props: PricingProps) {
                         <input
                             type="number"
                             className="form-control"
-                            defaultValue={props.product.compareAt}
-                            onChange={(e) =>
-                                props.setProduct({
-                                    ...props.product,
-                                    compareAt: +e.target.value,
-                                })
-                            }
+                            {...register("compareAt", { valueAsNumber: true })}
                         />
                     </div>
                 </div>
@@ -54,13 +39,7 @@ export function Pricing(props: PricingProps) {
                         <input
                             type="number"
                             className="form-control"
-                            defaultValue={props.product.cost}
-                            onChange={(e) =>
-                                props.setProduct({
-                                    ...props.product,
-                                    cost: +e.target.value,
-                                })
-                            }
+                            {...register("cost", { valueAsNumber: true })}
                         />
                     </div>
                 </div>
@@ -69,14 +48,14 @@ export function Pricing(props: PricingProps) {
                     <div className="input-group">
                         <span className="input-group-text">$</span>
                         <input
-                            type="string"
+                            type="text"
                             className="form-control"
                             readOnly
                             disabled
                             value={
-                                props.product.price == 0
+                                getValues("price") == 0 || isNaN(getValues("price"))
                                     ? "--"
-                                    : props.product.price - props.product.cost
+                                    : getValues("price") - getValues("cost")
                             }
                         />
                     </div>
@@ -86,16 +65,16 @@ export function Pricing(props: PricingProps) {
                     <div className="input-group">
                         <input
                             id="margin"
-                            type="string"
+                            type="text"
                             className="form-control"
                             readOnly
                             disabled
                             value={
-                                props.product.price == 0
+                                getValues("price") == 0 || isNaN(getValues("price"))
                                     ? "--"
                                     : (
-                                          ((props.product.price - props.product.cost) /
-                                              props.product.price) *
+                                          ((getValues("price") - getValues("cost")) /
+                                              getValues("price")) *
                                           100
                                       ).toFixed(2) + "%"
                             }

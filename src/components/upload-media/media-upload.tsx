@@ -1,15 +1,9 @@
 import { useRef, useState } from "react";
-import { Product } from "@/pages";
 import { ImagePreview } from "@/components/image-preview/image-preview";
 import "./style.css";
 import { DeleteHoverButton } from "@/components";
 
-interface MediaUploadProps {
-    product: Product;
-    setProduct: (product: Product) => void;
-}
-
-export function MediaUpload(props: MediaUploadProps) {
+export function MediaUpload() {
     const ref = useRef<HTMLInputElement>(null);
     const [media, setMedia] = useState<File[]>([]);
 

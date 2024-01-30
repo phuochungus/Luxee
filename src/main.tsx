@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Dashboard, Product } from "@/pages";
+import { Dashboard } from "@/pages";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -9,10 +9,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./style.css";
 
 const router = createBrowserRouter([
-    {
-        path: "/products/new",
-        element: <Product />,
-    },
     {
         path: "/",
         element: <Dashboard />,

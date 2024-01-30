@@ -1,58 +1,85 @@
-import { useEffect, useRef, useState } from "react";
-import { Variation } from "@/pages";
+import React, { useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Collapse } from "bootstrap";
+import { useFieldArray, useForm, useFormContext } from "react-hook-form";
+import { Product } from "@/components";
 
-interface VariationRowProps {
-    variation: Variation;
-    setVariation: (name: string, values: string[]) => void;
-    deleteVariation: () => void;
+export interface Value {
+    value: string;
+}
+
+export interface Option {
+    name: string;
+    values: Value[];
+}
+
+interface Props {
+    parentFieldIndex: number;
+    deleteOption: () => void;
     isToggle?: boolean;
 }
 
-export function VariationListItem(props: VariationRowProps) {
-    const [name, setName] = useState(props.variation.name);
-    const [values, setValues] = useState(props.variation.values);
-    const [focusIndex, setFocusIndex] = useState(-1);
-    const [toggle, setToggle] = useState<boolean>(props.isToggle ?? false);
+export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Props) {
     const refCollapse = useRef(null);
     const nameRef = useRef<HTMLInputElement>(null);
+    const [focusIndex, setFocusIndex] = useState(-1);
+    const [isShow, setIsShow] = useState<boolean>(isToggle ?? false);
+    const rootMethods = useFormContext<Product>();
+
+    const { register, getValues, control, reset } = useForm<Option>({
+        defaultValues: rootMethods.watch(`options.${parentFieldIndex}`),
+    });
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: "values",
+    });
+
+    const { ref, ...rest } = register("name");
+
+    useImperativeHandle(ref, () => nameRef.current);
 
     useEffect(() => {
         if (refCollapse.current == null) return;
-        const collapse = new Collapse(refCollapse.current!, { toggle });
-        if (toggle) {
+        const collapse = new Collapse(refCollapse.current!, { toggle: isShow });
+        if (isShow) {
             collapse.show();
             nameRef.current?.focus();
         } else {
             collapse.hide();
             nameRef.current?.blur();
         }
-    }, [toggle]);
+    }, [isShow]);
 
     return (
-        <div>
+        <React.Fragment>
             <div
                 id="heading"
                 className="d-flex justify-content-between align-items-space"
-                onClick={() => {
-                    setToggle((toggle) => !toggle);
-                }}
+                onClick={() => setIsShow((toggle) => !toggle)}
             >
                 <div>
-                    <h6 className="mb-0">{props.variation.name}</h6>
+                    <h6 className="mb-0">
+                        {rootMethods.watch(`options.${parentFieldIndex}.name`)}
+                    </h6>
+
                     <ol className="breadcrumb mb-0">
-                        {props.variation.values.map((value) => (
-                            <li className="breadcrumb-item" key={value}>
-                                <span>{value}</span>
-                            </li>
-                        ))}
+                        {rootMethods
+                            .watch(`options.${parentFieldIndex}.values`)
+                            .map((field) => (
+                                <li className="breadcrumb-item" key={field.value}>
+                                    <span>{field.value}</span>
+                                </li>
+                            ))}
                     </ol>
                 </div>
                 <div className="d-flex align-items-center">
-                    <button className="btn btn-outline-primary me-2">Edit</button>
+                    <button className="btn btn-outline-primary me-2" type="button">
+                        Edit
+                    </button>
                     <button
                         className="btn btn-outline-danger"
-                        onClick={props.deleteVariation}
+                        type="button"
+                        onClick={deleteOption}
                     >
                         Delete
                     </button>
@@ -69,12 +96,11 @@ export function VariationListItem(props: VariationRowProps) {
                                     ref={nameRef}
                                     type="text"
                                     className="form-control"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
+                                    {...rest}
                                 />
                                 <button
                                     className="btn btn-outline-secondary"
-                                    onClick={props.deleteVariation}
+                                    onClick={deleteOption}
                                     tabIndex={-1}
                                 >
                                     <svg
@@ -93,30 +119,17 @@ export function VariationListItem(props: VariationRowProps) {
                         <div>
                             <label>Values</label>
                             <div className="d-flex flex-column">
-                                {values.map((_, index) => (
-                                    <div key={index} className="input-group mb-2">
+                                {fields.map((field, index) => (
+                                    <div key={field.id} className="input-group mb-2">
                                         <input
                                             type="text"
                                             className="form-control"
-                                            value={values[index]}
-                                            onChange={(e) =>
-                                                setValues(
-                                                    values.map((value, i) =>
-                                                        i == index
-                                                            ? e.target.value
-                                                            : value
-                                                    )
-                                                )
-                                            }
+                                            {...register(`values.${index}.value`)}
                                             autoFocus={index == focusIndex}
                                         />
                                         <button
                                             className="btn btn-outline-secondary"
-                                            onClick={() =>
-                                                setValues(
-                                                    values.filter((_, i) => i != index)
-                                                )
-                                            }
+                                            onClick={() => remove(index)}
                                             tabIndex={-1}
                                         >
                                             <svg
@@ -142,8 +155,8 @@ export function VariationListItem(props: VariationRowProps) {
                                                 return;
                                             } else {
                                                 e.preventDefault();
-                                                setFocusIndex(values.length);
-                                                setValues([...values, value]);
+                                                setFocusIndex(getValues("values").length);
+                                                append({ value });
                                             }
                                         }}
                                     />
@@ -154,25 +167,31 @@ export function VariationListItem(props: VariationRowProps) {
                     <div className="d-flex mt-2">
                         <button
                             className="btn btn-primary me-2"
+                            type="button"
                             onClick={() => {
-                                props.setVariation(name, values);
+                                rootMethods.setValue(
+                                    `options.${parentFieldIndex}`,
+                                    getValues()
+                                );
+                                setIsShow(false);
                             }}
                         >
                             Save
                         </button>
                         <button
                             className="btn btn-outline-secondary"
+                            type="button"
                             onClick={() => {
                                 if (
-                                    props.variation.name == "" &&
-                                    props.variation.values.length == 0
+                                    getValues("name") == "" &&
+                                    getValues("values").length == 0
                                 ) {
-                                    props.deleteVariation();
-                                } else {
-                                    setToggle(false);
-                                    setValues(props.variation.values);
-                                    setName(props.variation.name);
+                                    deleteOption();
+                                    setIsShow(false);
+                                    return;
                                 }
+                                reset(rootMethods.watch(`options.${parentFieldIndex}`));
+                                setIsShow(false);
                             }}
                         >
                             Cancel
@@ -180,6 +199,6 @@ export function VariationListItem(props: VariationRowProps) {
                     </div>
                 </div>
             </div>
-        </div>
+        </React.Fragment>
     );
 }
