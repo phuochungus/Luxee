@@ -4,14 +4,12 @@ import { OptionListItem, Product } from "@/components";
 import "./style.css";
 
 export function OptionList() {
-    const { control, watch } = useFormContext<Product>();
+    const { control } = useFormContext<Product>();
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: "options",
     });
-
-    console.log(watch("options"));
 
     return (
         <ul className="list-group">

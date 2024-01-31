@@ -17,10 +17,19 @@ export interface Product {
     committed?: Number;
 }
 
-export const getAllProducts = async () => fetch("/api/products", { method: "GET" });
+export const getAllProducts = async () =>
+    fetch("/api/products", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
 
 export const getProductById = async (id: Number) =>
-    fetch(`/api/products/${id}`, { method: "GET" });
+    fetch(`/api/products/${id}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
 
 export const createProduct = async (product: any) =>
     fetch("/api/products", {

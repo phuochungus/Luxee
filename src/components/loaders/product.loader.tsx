@@ -2,7 +2,6 @@ import { getProductById } from "@/client";
 
 export async function ProductLoader({ params }: any) {
     const id = params.id;
-    console.log(id);
     if (id == "new")
         return {
             title: "",
@@ -18,7 +17,6 @@ export async function ProductLoader({ params }: any) {
             variants: [],
         };
     const res = await getProductById(params.id);
-    console.log(res);
     switch (res.status) {
         case 200:
             return await res.json();
@@ -26,7 +24,7 @@ export async function ProductLoader({ params }: any) {
         default:
             throw {
                 status: res.status,
-                message: (await res.json()).error,
+                message: await res.text(),
             };
     }
 }
