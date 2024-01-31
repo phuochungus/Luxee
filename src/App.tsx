@@ -3,7 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./style.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ProductPage, Error } from "@/pages";
-import { ProductLoader } from "@/components";
+import { ProductLoader } from "@/routes/loaders";
 
 const router = createBrowserRouter([
     {
