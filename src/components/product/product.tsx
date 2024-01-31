@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
     GenerateCollapse,
     Inventory,
@@ -11,6 +11,7 @@ import {
 import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
+import { useLoaderData } from "react-router-dom";
 
 export interface Variant {
     sku?: string;
@@ -53,29 +54,19 @@ export interface Product {
 
 export function Product() {
     const methods = useForm<Product>({
-        defaultValues: {
-            title: "",
-            description: "",
-            media: [],
-            sku: "",
-            barcode: "",
-            cost: 0,
-            unavailable: 0,
-            commited: 0,
-            available: 0,
-            options: [],
-            variants: [],
-        },
+        defaultValues: useLoaderData() as any,
     });
-    const { getValues, watch, setValue, handleSubmit } = methods;
 
     useEffect(() => {
-        const subscription = watch((_, { name }) => {
+        const subscription = methods.watch((_, { name }) => {
             if (name == "options")
-                setValue("variants", generateVariants(getValues("options")));
+                methods.setValue(
+                    "variants",
+                    generateVariants(methods.getValues("options"))
+                );
         });
         return () => subscription.unsubscribe();
-    }, [watch]);
+    }, [methods.watch]);
 
     const generateVariants = (options: Option[]): Variant[] => {
         if (options.length == 0) return [];
@@ -95,17 +86,17 @@ export function Product() {
             });
             return {
                 selectedVariations,
-                price: getValues("price"),
-                cost: getValues("cost"),
-                unavailable: getValues("unavailable"),
-                available: getValues("available"),
-                commited: getValues("commited"),
+                price: methods.getValues("price"),
+                cost: methods.getValues("cost"),
+                unavailable: methods.getValues("unavailable"),
+                available: methods.getValues("available"),
+                commited: methods.getValues("commited"),
             };
         });
     };
 
     useEffect(() => {
-        setValue(
+        methods.setValue(
             "options",
 
             [
@@ -148,7 +139,7 @@ export function Product() {
                     <button
                         className="btn btn-primary btn-sm mx-3"
                         type="button"
-                        onClick={handleSubmit(onSubmit)}
+                        onClick={methods.handleSubmit(onSubmit)}
                     >
                         Save
                     </button>
@@ -156,10 +147,11 @@ export function Product() {
 
                 <div className="px-4" style={{ width: "100%" }}>
                     <div className="container shadow">
-                        <form noValidate onSubmit={handleSubmit(onSubmit)}>
+                        <form noValidate onSubmit={methods.handleSubmit(onSubmit)}>
                             <div className="mb-3 ">
                                 <h5>Title</h5>
                                 <input
+                                    {...methods.register("title")}
                                     required
                                     autoFocus
                                     type="text"
@@ -181,7 +173,7 @@ export function Product() {
                                 <h5>Media</h5>
                                 <MediaUpload />
                             </div>
-                            {watch("variants") && (
+                            {methods.watch("variants") && (
                                 <>
                                     <div className="mb-3">
                                         <Pricing />
@@ -195,7 +187,7 @@ export function Product() {
                                 <h5>Option</h5>
                                 <OptionList />
                             </div>
-                            {watch("variants") && <VariantTable />}
+                            {methods.watch("variants") && <VariantTable />}
                         </form>
                     </div>
                 </div>

@@ -1,22 +1,32 @@
 import fetch from "unfetch";
 
-const getAllProducts = async () => {
-    const res = await fetch("/api/products", { method: "GET" });
-    return await res.json();
-};
+export interface Product {
+    id: Number;
+    isDraft: Boolean;
+    media: any[];
+    options: any[];
+    title: String;
+    description?: String;
+    barcode?: String;
+    sku?: String;
+    price: Number;
+    compareAtPrice?: Number;
+    cost?: Number;
+    unavailable?: Number;
+    available?: Number;
+    committed?: Number;
+}
 
-const getProductById = async (id: string) => {
-    const res = await fetch(`/api/products/${id}`, { method: "GET" });
-    return await res.json();
-};
+export const getAllProducts = async () => fetch("/api/products", { method: "GET" });
 
-const createProduct = async (product: any) => {
-    const res = await fetch("/api/products", {
+export const getProductById = async (id: Number) =>
+    fetch(`/api/products/${id}`, { method: "GET" });
+
+export const createProduct = async (product: any) =>
+    fetch("/api/products", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(product),
     });
-    return await res.json();
-};
