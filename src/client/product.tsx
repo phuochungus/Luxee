@@ -1,21 +1,5 @@
 import fetch from "unfetch";
 
-export interface Product {
-    id: Number;
-    isDraft: Boolean;
-    media: any[];
-    options: any[];
-    title: String;
-    description?: String;
-    barcode?: String;
-    sku?: String;
-    price: Number;
-    compareAtPrice?: Number;
-    cost?: Number;
-    unavailable?: Number;
-    available?: Number;
-    committed?: Number;
-}
 type Unfetch = (
     url: string,
     options?: {

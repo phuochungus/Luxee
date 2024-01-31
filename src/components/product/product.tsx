@@ -96,24 +96,20 @@ export function Product() {
     };
 
     useEffect(() => {
-        methods.setValue(
-            "options",
-
-            [
-                {
-                    name: "Color",
-                    values: [{ value: "Red" }, { value: "Blue" }, { value: "Green" }],
-                },
-                {
-                    name: "Size",
-                    values: [{ value: "S" }, { value: "M" }, { value: "L" }],
-                },
-                {
-                    name: "Material",
-                    values: [{ value: "Cotton" }, { value: "Polyester" }],
-                },
-            ]
-        );
+        methods.setValue("options", [
+            {
+                name: "Color",
+                values: [{ value: "Red" }, { value: "Blue" }, { value: "Green" }],
+            },
+            {
+                name: "Size",
+                values: [{ value: "S" }, { value: "M" }, { value: "L" }],
+            },
+            {
+                name: "Material",
+                values: [{ value: "Cotton" }, { value: "Polyester" }],
+            },
+        ]);
     }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
