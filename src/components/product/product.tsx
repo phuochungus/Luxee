@@ -9,9 +9,8 @@ import {
     Option,
 } from "@/components";
 import cartesian from "cartesian";
-import { FormProvider, SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
-import { Try } from "@mui/icons-material";
 
 export interface Variant {
     sku?: string;
@@ -68,7 +67,7 @@ export function Product() {
             variants: [],
         },
     });
-    const { register, getValues, watch, setValue, control, handleSubmit } = methods;
+    const { getValues, watch, setValue, handleSubmit } = methods;
 
     useEffect(() => {
         const subscription = watch((_, { name }) => {
@@ -126,14 +125,9 @@ export function Product() {
         );
     }, []);
 
-    const [showGenerateText, setShowGenerateText] = React.useState(false);
-
-    const handleAutoPressed = () => {
-        setShowGenerateText((showGenerateText) => !showGenerateText);
-    };
-
     const onSubmit: SubmitHandler<Product> = async (product) => {
         try {
+            const body = fetch;
         } catch (error) {}
     };
 
@@ -148,8 +142,16 @@ export function Product() {
                         top: "0",
                     }}
                 >
-                    <button className="btn btn-light btn-sm">Preview</button>
-                    <button className="btn btn-primary btn-sm mx-3">Save</button>
+                    <button className="btn btn-light btn-sm" type="button">
+                        Preview
+                    </button>
+                    <button
+                        className="btn btn-primary btn-sm mx-3"
+                        type="button"
+                        onClick={handleSubmit(onSubmit)}
+                    >
+                        Save
+                    </button>
                 </div>
 
                 <div className="px-4" style={{ width: "100%" }}>
