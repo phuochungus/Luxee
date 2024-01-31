@@ -59,7 +59,7 @@ export function Product() {
 
     useEffect(() => {
         const subscription = methods.watch((_, { name }) => {
-            if (name == "options")
+            if (name?.includes("options"))
                 methods.setValue(
                     "variants",
                     generateVariants(methods.getValues("options"))
@@ -72,9 +72,9 @@ export function Product() {
         if (options.length == 0) return [];
 
         const filterEmptyVariations = options.filter((array) => array.values.length > 0);
-        const onlyValuesArray: String[][] = filterEmptyVariations
-            .map((array) => array.values)
-            .map((array) => array.map((a) => a.value));
+        const onlyValuesArray: String[][] = filterEmptyVariations.map(
+            (array) => array.values
+        );
 
         const cartesianProduct = cartesian(onlyValuesArray);
         return cartesianProduct.map((array: string[]) => {
@@ -99,22 +99,22 @@ export function Product() {
         methods.setValue("options", [
             {
                 name: "Color",
-                values: [{ value: "Red" }, { value: "Blue" }, { value: "Green" }],
+                values: ["Red", "Blue", "Green"],
             },
             {
                 name: "Size",
-                values: [{ value: "S" }, { value: "M" }, { value: "L" }],
+                values: ["S", "M", "L"],
             },
             {
                 name: "Material",
-                values: [{ value: "Cotton" }, { value: "Polyester" }],
+                values: ["Cotton", "Polyester", "Wool"],
             },
         ]);
     }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
         try {
-            const body = fetch;
+            console.log(product);
         } catch (error) {}
     };
 

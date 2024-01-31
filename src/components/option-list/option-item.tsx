@@ -3,13 +3,9 @@ import { Collapse } from "bootstrap";
 import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { Product } from "@/components";
 
-export interface Value {
-    value: string;
-}
-
 export interface Option {
     name: string;
-    values: Value[];
+    values: String[];
 }
 
 interface Props {
@@ -66,8 +62,8 @@ export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Pro
                         {rootMethods
                             .watch(`options.${parentFieldIndex}.values`)
                             .map((field) => (
-                                <li className="breadcrumb-item" key={field.value}>
-                                    <span>{field.value}</span>
+                                <li className="breadcrumb-item" key={field.toString()}>
+                                    <span>{field}</span>
                                 </li>
                             ))}
                     </ol>
@@ -124,7 +120,7 @@ export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Pro
                                         <input
                                             type="text"
                                             className="form-control"
-                                            {...register(`values.${index}.value`)}
+                                            {...register(`values.${index}`)}
                                             autoFocus={index == focusIndex}
                                         />
                                         <button
@@ -156,7 +152,7 @@ export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Pro
                                             } else {
                                                 e.preventDefault();
                                                 setFocusIndex(getValues("values").length);
-                                                append({ value });
+                                                append(value);
                                             }
                                         }}
                                     />
