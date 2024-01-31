@@ -1,7 +1,7 @@
 import { Product, Sidebar } from "@/components";
 import "./style.css";
 
-export function Dashboard() {
+export function ProductPage() {
     return (
         <div
             className="d-flex flex-row"
