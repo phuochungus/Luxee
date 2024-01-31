@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import {
     GenerateCollapse,
     Inventory,
-    MediaUpload,
+    Media,
     Pricing,
     TextEditor,
     VariantTable,
@@ -22,7 +22,7 @@ export interface Variant {
     unavailable: number;
     commited: number;
     available: number;
-    media?: File[];
+    media?: Media[];
     selectedVariations: SelectedVariation[];
 }
 
@@ -39,7 +39,7 @@ export interface VariationListContextProps {
 export interface Product {
     title: string;
     description: string;
-    media: File[];
+    media: Media[];
     price: number;
     compareAt?: number;
     cost: number;
@@ -167,7 +167,7 @@ export function Product() {
                             </div>
                             <div className="mb-3">
                                 <h5>Media</h5>
-                                <MediaUpload />
+                                <Media />
                             </div>
                             {methods.watch("variants") && (
                                 <>

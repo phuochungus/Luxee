@@ -3,7 +3,16 @@ import { ImagePreview } from "@/components/image-preview/image-preview";
 import "./style.css";
 import { DeleteHoverButton } from "@/components";
 
-export function MediaUpload() {
+enum MediaType {
+    IMAGE,
+    VIDEO,
+}
+export interface Media {
+    url: string;
+    mediaType: MediaType;
+}
+
+export function Media() {
     const ref = useRef<HTMLInputElement>(null);
     const [media, setMedia] = useState<File[]>([]);
 
