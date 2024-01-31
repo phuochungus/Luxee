@@ -11,7 +11,7 @@ export async function ProductLoader({ params }: any) {
             barcode: "",
             cost: 0,
             unavailable: 0,
-            commited: 0,
+            committed: 0,
             available: 0,
             options: [],
             variants: [],

@@ -19,7 +19,7 @@ export function VariantTable() {
                         </th>
 
                         <th>Unavailable</th>
-                        <th>Commited</th>
+                        <th>Committed</th>
                         <th>Available</th>
                         <th>Action</th>
                     </tr>
@@ -34,7 +34,7 @@ export function VariantTable() {
                                     .join(" / ")}
                             </td>
                             <td>{variant.unavailable}</td>
-                            <td>{variant.commited}</td>
+                            <td>{variant.committed}</td>
                             <td>{variant.available}</td>
                             <td>
                                 <div>

@@ -6,7 +6,7 @@ export function Inventory() {
     return (
         <div>
             <h5>Inventory</h5>
-            <div className="row mb-2">
+            <div className="row mb-2 g-3">
                 <div className="col-3">
                     <label>SKU</label>
                     <input type="text" className="form-control" {...register("sku")} />
@@ -20,31 +20,36 @@ export function Inventory() {
                     />
                 </div>
                 <div className="col-6" />
-            </div>
-            <div className="row">
+
                 <div className="col-3">
                     <label>Unavailable</label>
                     <input
+                        required={!watch("variants")?.length}
                         type="number"
                         className="form-control"
                         {...register("unavailable")}
                     />
+                    <div className="invalid-feedback">Field is required</div>
                 </div>
                 <div className="col-3">
-                    <label>Commited</label>
+                    <label>Committed</label>
                     <input
+                        required={!watch("variants")?.length}
                         type="number"
                         className="form-control"
-                        {...register("commited")}
+                        {...register("committed")}
                     />
+                    <div className="invalid-feedback">Field is required</div>
                 </div>
                 <div className="col-3">
                     <label>Available</label>
                     <input
+                        required={!watch("variants")?.length}
                         type="number"
                         className="form-control"
                         {...register("available")}
                     />
+                    <div className="invalid-feedback">Field is required</div>
                 </div>
                 <div className="col-3">
                     <label>On-hand</label>
@@ -55,7 +60,7 @@ export function Inventory() {
                         disabled
                         value={
                             +watch("available") +
-                            +watch("commited") +
+                            +watch("committed") +
                             +watch("unavailable")
                         }
                     />

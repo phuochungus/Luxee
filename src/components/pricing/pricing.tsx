@@ -6,17 +6,18 @@ export function Pricing() {
     return (
         <div>
             <h5>Pricing</h5>
-            <div className="row mb-2">
+            <div className="row mb-2 g-3">
                 <div className="col-3">
-                    <label>Price*</label>
-                    <div className="input-group">
+                    <label className="form-label">Price</label>
+                    <div className="input-group has-validation">
                         <span className="input-group-text">$</span>
                         <input
                             type="number"
                             className="form-control"
-                            required
+                            required={!watch("variants")?.length}
                             {...register("price", { valueAsNumber: true })}
                         />
+                        <div className="invalid-feedback">Price is required</div>
                     </div>
                 </div>
                 <div className="col-3">
@@ -30,8 +31,8 @@ export function Pricing() {
                         />
                     </div>
                 </div>
-            </div>
-            <div className="row">
+                <div className="col-6"></div>
+
                 <div className="col-3">
                     <label>Cost</label>
                     <div className="input-group">

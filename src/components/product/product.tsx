@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
     GenerateCollapse,
     Inventory,
@@ -12,6 +12,7 @@ import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
 import { useLoaderData } from "react-router-dom";
+import { createProduct } from "@/client";
 
 export interface Variant {
     sku?: string;
@@ -20,7 +21,7 @@ export interface Variant {
     compareAt?: number;
     cost: number;
     unavailable: number;
-    commited: number;
+    committed: number;
     available: number;
     media?: Media[];
     selectedVariations: SelectedVariation[];
@@ -46,7 +47,7 @@ export interface Product {
     sku?: string;
     barcode?: string;
     unavailable: number;
-    commited: number;
+    committed: number;
     available: number;
     options: Option[];
     variants: Variant[];
@@ -54,7 +55,7 @@ export interface Product {
 
 export function Product() {
     const methods = useForm<Product>({
-        defaultValues: useLoaderData() as any,
+        defaultValues: useLoaderData() as Product,
     });
 
     useEffect(() => {
@@ -90,37 +91,44 @@ export function Product() {
                 cost: methods.getValues("cost"),
                 unavailable: methods.getValues("unavailable"),
                 available: methods.getValues("available"),
-                commited: methods.getValues("commited"),
+                committed: methods.getValues("committed"),
             };
         });
     };
 
-    useEffect(() => {
-        methods.setValue("options", [
-            {
-                name: "Color",
-                values: ["Red", "Blue", "Green"],
-            },
-            {
-                name: "Size",
-                values: ["S", "M", "L"],
-            },
-            {
-                name: "Material",
-                values: ["Cotton", "Polyester", "Wool"],
-            },
-        ]);
-    }, []);
+    // useEffect(() => {
+    //     methods.setValue("options", [
+    //         {
+    //             name: "Color",
+    //             values: ["Red", "Blue", "Green"],
+    //         },
+    //         {
+    //             name: "Size",
+    //             values: ["S", "M", "L"],
+    //         },
+    //         {
+    //             name: "Material",
+    //             values: ["Cotton", "Polyester", "Wool"],
+    //         },
+    //     ]);
+    // }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
+        formRef.current?.classList.add("was-validated");
+        if (!formRef.current?.checkValidity()) return;
         try {
-            console.log(product);
-        } catch (error) {}
+            const res = await createProduct(product);
+            console.log(await res.json());
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+    const formRef = useRef<HTMLFormElement>(null);
 
     return (
         <FormProvider {...methods}>
-            <div>
+            <div style={{ width: "100%" }}>
                 <div
                     className="py-1 mb-2 bg-secondary d-flex justify-content-end"
                     style={{
@@ -143,19 +151,26 @@ export function Product() {
 
                 <div className="px-4" style={{ width: "100%" }}>
                     <div className="container shadow">
-                        <form noValidate onSubmit={methods.handleSubmit(onSubmit)}>
+                        <form
+                            className="needs-validation"
+                            ref={formRef}
+                            noValidate
+                            onSubmit={methods.handleSubmit(onSubmit)}
+                        >
                             <div className="mb-3 ">
                                 <h5>Title</h5>
-                                <input
-                                    {...methods.register("title")}
-                                    required
-                                    autoFocus
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Give your product a title.."
-                                />
-                                <div className="invalid-feedback">
-                                    Please provide a title
+                                <div>
+                                    <input
+                                        {...methods.register("title")}
+                                        required
+                                        autoFocus
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Give your product a title.."
+                                    />
+                                    <div className="invalid-feedback">
+                                        Please provide a title
+                                    </div>
                                 </div>
                             </div>
                             <div className="mb-3">
@@ -169,7 +184,7 @@ export function Product() {
                                 <h5>Media</h5>
                                 <Media />
                             </div>
-                            {methods.watch("variants") && (
+                            {!methods.watch("variants")?.length && (
                                 <>
                                     <div className="mb-3">
                                         <Pricing />
