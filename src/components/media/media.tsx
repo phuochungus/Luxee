@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { ImagePreview } from "@/components/image-preview/image-preview";
+import { ImagePreview } from "@/components/media/image-preview";
 import "./style.css";
 import { DeleteHoverButton } from "@/components";
 
@@ -12,14 +12,26 @@ export interface Media {
     mediaType: MediaType;
 }
 
+interface FileWrapper {
+    file: File;
+    id: number;
+}
+
 export function Media() {
     const ref = useRef<HTMLInputElement>(null);
-    const [media, setMedia] = useState<File[]>([]);
+    const [media, setMedia] = useState<FileWrapper[]>([]);
 
     const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.files);
         if (e.target.files) {
-            const files = Array.from(e.target.files);
-            setMedia([...media, ...files]);
+            let files = Array.from(e.target.files);
+            let fileWithId = files.map((file) => {
+                return {
+                    id: Date.now(),
+                    file,
+                } as FileWrapper;
+            });
+            setMedia([...media, ...fileWithId]);
         }
     };
 
@@ -62,7 +74,13 @@ export function Media() {
                     e.currentTarget.classList.remove("border-info");
                     if (e.dataTransfer.items) {
                         const files = Array.from(e.dataTransfer.files);
-                        setMedia([...media, ...files]);
+                        let fileWithId = files.map((file) => {
+                            return {
+                                id: Date.now(),
+                                file,
+                            } as FileWrapper;
+                        });
+                        setMedia([...media, ...fileWithId]);
                     }
                 }}
                 className="d-flex justify-content-center align-items-center bg-light mb-3"
@@ -74,6 +92,9 @@ export function Media() {
                     multiple
                     hidden
                     onChange={addFile}
+                    onClick={(e) => {
+                        e.currentTarget.value = "";
+                    }}
                 />
                 <div className="d-flex flex-column flex-wrap align-items-center">
                     <div>
@@ -98,53 +119,55 @@ export function Media() {
                     <span>drag and drop here</span>
                 </div>
             </div>
-            {media.length != 0 && (
-                <div className="d-flex">
-                    {media.map((file, index) => (
-                        <div
-                            className="card me-2 text-bg-light  p-1"
-                            key={file.name}
-                            style={{
-                                width: "10rem",
-                            }}
-                            draggable
-                            onDragStart={(_) => {
-                                dragFile.current = index;
-                            }}
-                            onDragEnter={(_) => {
-                                dragOverFile.current = index;
-                            }}
-                            onDragEnd={handleSort}
-                            onDragOver={(e) => {
-                                e.preventDefault();
-                            }}
-                        >
-                            <ImagePreview file={file} />
-                            <div>
-                                <p
-                                    className="card-text overflow-hidden"
-                                    style={{
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                    }}
-                                >
-                                    {file.name}
-                                </p>
+            <div>
+                {media.length != 0 && (
+                    <div className="row">
+                        {media.map((file, index) => (
+                            <div
+                                className="card me-2 text-bg-light  p-1"
+                                key={file.id}
+                                style={{
+                                    width: "10rem",
+                                }}
+                                draggable
+                                onDragStart={(_) => {
+                                    dragFile.current = index;
+                                }}
+                                onDragEnter={(_) => {
+                                    dragOverFile.current = index;
+                                }}
+                                onDragEnd={handleSort}
+                                onDragOver={(e) => {
+                                    e.preventDefault();
+                                }}
+                            >
+                                <ImagePreview file={file.file} />
+                                <div>
+                                    <p
+                                        className="card-text overflow-hidden"
+                                        style={{
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
+                                        }}
+                                    >
+                                        {file.file.name}
+                                    </p>
+                                </div>
+                                <div className="d-flex justify-content-end pe-1 pb-1 pt-1">
+                                    <DeleteHoverButton
+                                        onClick={() => {
+                                            const newMedia = media.filter(
+                                                (f) => f.id != file.id
+                                            );
+                                            setMedia(newMedia);
+                                        }}
+                                    />
+                                </div>
                             </div>
-                            <div className="d-flex justify-content-end pe-1 pb-1 pt-1">
-                                <DeleteHoverButton
-                                    onClick={() => {
-                                        const newMedia = media.filter(
-                                            (f) => f.name != file.name
-                                        );
-                                        setMedia(newMedia);
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
