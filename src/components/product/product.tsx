@@ -116,6 +116,7 @@ export function Product() {
     const onSubmit: SubmitHandler<Product> = async (product) => {
         formRef.current?.classList.add("was-validated");
         if (!formRef.current?.checkValidity()) return;
+        // console.log(product);
         try {
             const res = await createProduct(product);
             console.log(await res.json());
