@@ -1,7 +1,9 @@
 import { Ref, forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { ImagePreview } from "@/components/media/image-preview";
+import { ImagePreview } from "@/components/upload-media/image-preview";
 import "./style.css";
 import { DeleteHoverButton } from "@/components";
+import { Signature, uploadFileToCloudinary } from "@/client";
+import { createSignature } from "@/client/media";
 
 enum MediaType {
     IMAGE,
@@ -15,11 +17,7 @@ export interface Media {
 interface FileWrapper {
     file: File;
     id: number;
-}
-
-interface Props {
-    media: Media[];
-    setMedia: (media: Media[]) => void;
+    mediaType: MediaType;
 }
 
 export interface UploadMediaRef {
@@ -31,16 +29,18 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
     const [fileWrappers, setFileWrappers] = useState<FileWrapper[]>([]);
 
     const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.files);
         if (e.target.files) {
             let files = Array.from(e.target.files);
-            let fileWrappers = files.map((file) => {
+            let newfileWrappers = files.map((file) => {
                 return {
                     id: Date.now(),
                     file,
+                    mediaType: file.type.startsWith("image/")
+                        ? MediaType.IMAGE
+                        : MediaType.VIDEO,
                 } as FileWrapper;
             });
-            setFileWrappers([...fileWrappers, ...fileWrappers]);
+            setFileWrappers([...fileWrappers, ...newfileWrappers]);
         }
     };
 
@@ -49,10 +49,21 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
     }));
 
     async function sendMedia(productId: number): Promise<Media[]> {
-        //TODO: - get signed URL from server
-        //      - upload media to signed URL
-        //      - return media URLs
-        return [];
+        if (fileWrappers.length == 0) return [];
+        const signature: Signature = await (await createSignature()).json();
+
+        let media = [] as Media[];
+
+        for (let fileWrapper of fileWrappers) {
+            const url: string = (
+                await (await uploadFileToCloudinary(fileWrapper.file, signature)).json()
+            ).url;
+            media.push({
+                url,
+                mediaType: fileWrapper.mediaType,
+            } as Media);
+        }
+        return media;
     }
 
     const dragFile = useRef<number>(-1);
@@ -94,13 +105,13 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
                     e.currentTarget.classList.remove("border-info");
                     if (e.dataTransfer.items) {
                         const files = Array.from(e.dataTransfer.files);
-                        let fileWrappers = files.map((file) => {
+                        let newfileWrappers = files.map((file) => {
                             return {
                                 id: Date.now(),
                                 file,
                             } as FileWrapper;
                         });
-                        setFileWrappers([...fileWrappers, ...fileWrappers]);
+                        setFileWrappers([...fileWrappers, ...newfileWrappers]);
                     }
                 }}
                 className="d-flex justify-content-center align-items-center bg-light mb-3"

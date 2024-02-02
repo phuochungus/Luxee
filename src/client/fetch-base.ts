@@ -9,4 +9,4 @@ export const fetchBase: Unfetch = (
         credentials?: "include" | "omit";
         body?: Parameters<XMLHttpRequest["send"]>[0];
     }
-) => fetch(`${import.meta.env.VITE_BACKEND_BASE_UR}${url}`, options);
+) => fetch(`${import.meta.env.VITE_BACKEND_URL}${url}`, options);
