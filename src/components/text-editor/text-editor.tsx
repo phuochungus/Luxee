@@ -5,7 +5,7 @@ export function TextEditor() {
         <Editor
             apiKey="l8kc9p8z98af4d8pknzj21xy19a09u53gvinojn4yca3qty9"
             init={{
-                min_height: 200,
+                min_height: 50,
                 plugins:
                     "preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion",
 

@@ -124,10 +124,9 @@ export function Media() {
                     <div className="row">
                         {media.map((file, index) => (
                             <div
-                                className="card me-2 text-bg-light  p-1"
                                 key={file.id}
                                 style={{
-                                    width: "10rem",
+                                    width: "14.5rem",
                                 }}
                                 draggable
                                 onDragStart={(_) => {
@@ -141,27 +140,24 @@ export function Media() {
                                     e.preventDefault();
                                 }}
                             >
-                                <ImagePreview file={file.file} />
-                                <div>
-                                    <p
-                                        className="card-text overflow-hidden"
-                                        style={{
-                                            textOverflow: "ellipsis",
-                                            whiteSpace: "nowrap",
-                                        }}
+                                <div className="position-relative d-flex flex-row-reverse">
+                                    <ImagePreview file={file.file} />
+                                    <div className="position-absolute d-flex">
+                                        <DeleteHoverButton
+                                            onClick={() => {
+                                                const newMedia = media.filter(
+                                                    (f) => f.id != file.id
+                                                );
+                                                setMedia(newMedia);
+                                            }}
+                                        />
+                                    </div>
+                                    <h6
+                                        className="position-absolute p-1 bg-info"
+                                        style={{ left: 0 }}
                                     >
-                                        {file.file.name}
-                                    </p>
-                                </div>
-                                <div className="d-flex justify-content-end pe-1 pb-1 pt-1">
-                                    <DeleteHoverButton
-                                        onClick={() => {
-                                            const newMedia = media.filter(
-                                                (f) => f.id != file.id
-                                            );
-                                            setMedia(newMedia);
-                                        }}
-                                    />
+                                        {index}
+                                    </h6>
                                 </div>
                             </div>
                         ))}

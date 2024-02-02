@@ -17,12 +17,12 @@ export function DeleteHoverButton({ onClick }: { onClick: () => void }) {
         >
             {hover ? (
                 <i
-                    className="bi bi-x-circle-fill d-flex"
+                    className="bi bi-x-octagon-fill d-flex"
                     style={{ color: hover ? "red" : "red" }}
                 />
             ) : (
                 <i
-                    className="bi bi-x-circle d-flex"
+                    className="bi bi-x-octagon d-flex"
                     style={{ color: hover ? "red" : "red" }}
                 />
             )}

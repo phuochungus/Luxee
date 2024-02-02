@@ -11,12 +11,5 @@ export function ImagePreview({ file }: { file: File }) {
         reader.readAsDataURL(file);
     }, [file]);
 
-    return (
-        <img
-            className="img-fluid img-thumbnail card-img-top"
-            draggable={false}
-            src={src}
-            alt={file.name}
-        />
-    );
+    return <img className="img-thumbnail border-0" draggable={false} src={src} alt={file.name} />;
 }
