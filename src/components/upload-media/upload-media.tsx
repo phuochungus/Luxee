@@ -1,9 +1,11 @@
 import { Ref, forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { ImagePreview } from "@/components/upload-media/image-preview";
-import "./style.css";
 import { DeleteHoverButton } from "@/components";
 import { Signature, uploadFileToCloudinary } from "@/client";
-import { createSignature } from "@/client/media";
+import { createSignature } from "@/client";
+import { v4 } from "uuid";
+
+import "./style.css";
 
 enum MediaType {
     IMAGE,
@@ -16,7 +18,7 @@ export interface Media {
 
 interface FileWrapper {
     file: File;
-    id: number;
+    id: string;
     mediaType: MediaType;
 }
 
@@ -33,7 +35,7 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
             let files = Array.from(e.target.files);
             let newfileWrappers = files.map((file) => {
                 return {
-                    id: Date.now(),
+                    id: v4(),
                     file,
                     mediaType: file.type.startsWith("image/")
                         ? MediaType.IMAGE
@@ -48,7 +50,7 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
         sendMedia,
     }));
 
-    async function sendMedia(productId: number): Promise<Media[]> {
+    async function sendMedia(): Promise<Media[]> {
         if (fileWrappers.length == 0) return [];
         const signature: Signature = await (await createSignature()).json();
 
@@ -107,7 +109,7 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
                         const files = Array.from(e.dataTransfer.files);
                         let newfileWrappers = files.map((file) => {
                             return {
-                                id: Date.now(),
+                                id: v4(),
                                 file,
                             } as FileWrapper;
                         });

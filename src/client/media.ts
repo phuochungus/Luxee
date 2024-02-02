@@ -10,8 +10,8 @@ export const createSignature = async () => {
     });
 };
 
-export const updateMedia = async (id: Number, media: Media[]) => {
-    return fetchBase(`/api/products/${id}/media`, {
+export const updateMedia = async (productId: Number, media: Media[]) => {
+    return fetchBase(`/api/products/${productId}/media`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

@@ -14,7 +14,7 @@ import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
 import { useLoaderData } from "react-router-dom";
-import { createProduct } from "@/client";
+import { createProduct, updateMedia } from "@/client";
 
 export interface Variant {
     sku?: string;
@@ -119,9 +119,12 @@ export function Product() {
         formRef.current?.classList.add("was-validated");
         if (!formRef.current?.checkValidity()) return;
         try {
-            const res = await createProduct(product);
+            let res = await createProduct(product);
             const productId = await res.json();
-            const media = await mediaRef.current?.sendMedia(productId);
+            const media = await mediaRef.current!.sendMedia(productId);
+            console.log(media);
+            res = await updateMedia(productId, media);
+            console.log(res.status);
         } catch (error) {
             console.error(error);
         }
