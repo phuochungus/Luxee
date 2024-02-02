@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Ref, forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { ImagePreview } from "@/components/media/image-preview";
 import "./style.css";
 import { DeleteHoverButton } from "@/components";
@@ -17,36 +17,56 @@ interface FileWrapper {
     id: number;
 }
 
-export function Media() {
-    const ref = useRef<HTMLInputElement>(null);
-    const [media, setMedia] = useState<FileWrapper[]>([]);
+interface Props {
+    media: Media[];
+    setMedia: (media: Media[]) => void;
+}
+
+export interface UploadMediaRef {
+    sendMedia: (productId: number) => Promise<Media[]>;
+}
+
+export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
+    const localRef = useRef<HTMLInputElement>(null);
+    const [fileWrappers, setFileWrappers] = useState<FileWrapper[]>([]);
 
     const addFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.files);
         if (e.target.files) {
             let files = Array.from(e.target.files);
-            let fileWithId = files.map((file) => {
+            let fileWrappers = files.map((file) => {
                 return {
                     id: Date.now(),
                     file,
                 } as FileWrapper;
             });
-            setMedia([...media, ...fileWithId]);
+            setFileWrappers([...fileWrappers, ...fileWrappers]);
         }
     };
+
+    useImperativeHandle(ref, () => ({
+        sendMedia,
+    }));
+
+    async function sendMedia(productId: number): Promise<Media[]> {
+        //TODO: - get signed URL from server
+        //      - upload media to signed URL
+        //      - return media URLs
+        return [];
+    }
 
     const dragFile = useRef<number>(-1);
     const dragOverFile = useRef<number>(-1);
     const handleSort = () => {
         if (dragFile.current == -1 || dragOverFile.current == -1) return;
-        let newMedia = [...media];
+        let newMedia = [...fileWrappers];
         newMedia = newMedia.filter((_, index) => index != dragFile.current);
         newMedia = [
             ...newMedia.slice(0, dragOverFile.current),
-            media[dragFile.current],
+            fileWrappers[dragFile.current],
             ...newMedia.slice(dragOverFile.current),
         ];
-        setMedia(newMedia);
+        setFileWrappers(newMedia);
         dragFile.current = -1;
         dragOverFile.current = -1;
     };
@@ -56,7 +76,7 @@ export function Media() {
             <div
                 id="drop-area"
                 onClick={() => {
-                    if (ref && ref.current) ref.current.click();
+                    if (localRef && localRef.current) localRef.current.click();
                 }}
                 onDragOver={(e) => {
                     e.preventDefault();
@@ -74,19 +94,19 @@ export function Media() {
                     e.currentTarget.classList.remove("border-info");
                     if (e.dataTransfer.items) {
                         const files = Array.from(e.dataTransfer.files);
-                        let fileWithId = files.map((file) => {
+                        let fileWrappers = files.map((file) => {
                             return {
                                 id: Date.now(),
                                 file,
                             } as FileWrapper;
                         });
-                        setMedia([...media, ...fileWithId]);
+                        setFileWrappers([...fileWrappers, ...fileWrappers]);
                     }
                 }}
                 className="d-flex justify-content-center align-items-center bg-light mb-3"
             >
                 <input
-                    ref={ref}
+                    ref={localRef}
                     type="file"
                     accept="video/*,image/*"
                     multiple
@@ -120,9 +140,9 @@ export function Media() {
                 </div>
             </div>
             <div>
-                {media.length != 0 && (
+                {fileWrappers.length != 0 && (
                     <div className="row">
-                        {media.map((file, index) => (
+                        {fileWrappers.map((file, index) => (
                             <div
                                 key={file.id}
                                 style={{
@@ -145,10 +165,11 @@ export function Media() {
                                     <div className="position-absolute d-flex">
                                         <DeleteHoverButton
                                             onClick={() => {
-                                                const newMedia = media.filter(
-                                                    (f) => f.id != file.id
-                                                );
-                                                setMedia(newMedia);
+                                                const newFileWrappers =
+                                                    fileWrappers.filter(
+                                                        (f) => f.id != file.id
+                                                    );
+                                                setFileWrappers(newFileWrappers);
                                             }}
                                         />
                                     </div>
@@ -166,4 +187,4 @@ export function Media() {
             </div>
         </div>
     );
-}
+});

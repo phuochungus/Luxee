@@ -2,11 +2,13 @@ import { useEffect, useRef } from "react";
 import {
     GenerateCollapse,
     Inventory,
-    Media,
+    UploadMedia,
     Pricing,
     TextEditor,
     VariantTable,
     Option,
+    UploadMediaRef,
+    Media,
 } from "@/components";
 import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -118,13 +120,15 @@ export function Product() {
         if (!formRef.current?.checkValidity()) return;
         try {
             const res = await createProduct(product);
-            console.log(await res.json());
+            const productId = await res.json();
+            const media = await mediaRef.current?.sendMedia(productId);
         } catch (error) {
             console.error(error);
         }
     };
 
     const formRef = useRef<HTMLFormElement>(null);
+    const mediaRef = useRef<UploadMediaRef>(null);
 
     return (
         <FormProvider {...methods}>
@@ -182,7 +186,7 @@ export function Product() {
                             </div>
                             <div className="mb-3">
                                 <h5>Media</h5>
-                                <Media />
+                                <UploadMedia ref={mediaRef} />
                             </div>
                             {!methods.watch("variants")?.length && (
                                 <>
