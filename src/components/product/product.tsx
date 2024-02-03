@@ -26,12 +26,13 @@ export interface Variant {
     committed: number;
     available: number;
     media?: Media[];
-    selectedVariations: SelectedVariation[];
+    selectedOptionsValue: SelectedOptionValue[];
 }
 
-export interface SelectedVariation {
+export interface SelectedOptionValue {
     name: string;
     value: string;
+    valueIndex: number;
 }
 
 export interface VariationListContextProps {
@@ -81,14 +82,17 @@ export function Product() {
 
         const cartesianProduct = cartesian(onlyValuesArray);
         return cartesianProduct.map((array: string[]) => {
-            const selectedVariations: SelectedVariation[] = array.map((value, index) => {
-                return {
-                    name: filterEmptyVariations[index].name,
-                    value: value,
-                };
-            });
+            const selectedVariations: SelectedOptionValue[] = array.map(
+                (value, index) => {
+                    return {
+                        name: filterEmptyVariations[index].name,
+                        value: value,
+                        valueIndex: filterEmptyVariations[index].values.indexOf(value),
+                    };
+                }
+            );
             return {
-                selectedVariations,
+                selectedOptionsValue: selectedVariations,
                 price: methods.getValues("price"),
                 cost: methods.getValues("cost"),
                 unavailable: methods.getValues("unavailable"),
@@ -98,24 +102,26 @@ export function Product() {
         });
     };
 
-    // useEffect(() => {
-    //     methods.setValue("options", [
-    //         {
-    //             name: "Color",
-    //             values: ["Red", "Blue", "Green"],
-    //         },
-    //         {
-    //             name: "Size",
-    //             values: ["S", "M", "L"],
-    //         },
-    //         {
-    //             name: "Material",
-    //             values: ["Cotton", "Polyester", "Wool"],
-    //         },
-    //     ]);
-    // }, []);
+    useEffect(() => {
+        methods.setValue("options", [
+            {
+                name: "Color",
+                values: ["Red", "Blue", "Green"],
+            },
+            {
+                name: "Size",
+                values: ["S", "M", "L"],
+            },
+            {
+                name: "Material",
+                values: ["Cotton", "Polyester", "Wool"],
+            },
+        ]);
+    }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
+        console.log(product.variants);
+        return;
         formRef.current?.classList.add("was-validated");
         if (!formRef.current?.checkValidity()) return;
         try {

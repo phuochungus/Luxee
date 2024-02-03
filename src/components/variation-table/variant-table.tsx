@@ -29,7 +29,7 @@ export function VariantTable() {
                         <tr key={index}>
                             <th>{index + 1}</th>
                             <td>
-                                {variant.selectedVariations
+                                {variant.selectedOptionsValue
                                     .map((a) => a.value)
                                     .join(" / ")}
                             </td>
