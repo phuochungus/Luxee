@@ -93,7 +93,7 @@ export function Product() {
             );
             return {
                 selectedOptionsValue: selectedVariations,
-                price: methods.getValues("price"),
+                price: methods.getValues("price") || 0,
                 cost: methods.getValues("cost"),
                 unavailable: methods.getValues("unavailable"),
                 available: methods.getValues("available"),
