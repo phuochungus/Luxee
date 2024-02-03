@@ -14,6 +14,7 @@ enum MediaType {
 export interface Media {
     url: string;
     mediaType: MediaType;
+    publicId: string;
 }
 
 interface FileWrapper {
@@ -57,12 +58,14 @@ export const UploadMedia = forwardRef((_, ref: Ref<UploadMediaRef>) => {
         let media = [] as Media[];
 
         for (let fileWrapper of fileWrappers) {
-            const url: string = (
-                await (await uploadFileToCloudinary(fileWrapper.file, signature)).json()
-            ).url;
+            const body = await (
+                await uploadFileToCloudinary(fileWrapper.file, signature)
+            ).json();
+            console.log(body);
             media.push({
-                url,
+                url: body.url,
                 mediaType: fileWrapper.mediaType,
+                publicId: body.public_id,
             } as Media);
         }
         return media;
