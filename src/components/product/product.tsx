@@ -14,7 +14,7 @@ import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
 import { useLoaderData } from "react-router-dom";
-import { createProduct, updateMedia } from "@/client";
+import { createProduct, createVariants, updateMedia } from "@/client";
 
 export interface Variant {
     sku?: string;
@@ -108,32 +108,34 @@ export function Product() {
                 name: "Color",
                 values: ["Red", "Blue", "Green"],
             },
-            {
-                name: "Size",
-                values: ["S", "M", "L"],
-            },
-            {
-                name: "Material",
-                values: ["Cotton", "Polyester", "Wool"],
-            },
+            // {
+            //     name: "Size",
+            //     values: ["S", "M", "L"],
+            // },
+            // {
+            //     name: "Material",
+            //     values: ["Cotton", "Polyester", "Wool"],
+            // },
         ]);
     }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
-        console.log(product.variants);
-        return;
         formRef.current?.classList.add("was-validated");
         if (!formRef.current?.checkValidity()) return;
-        try {
-            let res = await createProduct(product);
-            const productId = await res.json();
-            const media = await mediaRef.current!.sendMedia(productId);
-            console.log(media);
-            res = await updateMedia(productId, media);
-            console.log(res.status);
-        } catch (error) {
-            console.error(error);
-        }
+
+        const { variants, ...rest } = product;
+
+        const createProductRes = await createProduct(rest);
+        console.log(await createProductRes.text());
+        const productId = Number(await createProductRes.text());
+
+        const media = await mediaRef.current!.sendMedia(productId);
+        const updateMediaRes = await updateMedia(productId, media);
+
+        console.log(await updateMediaRes.text());
+        const createVariantsRes = await createVariants(productId, product.variants);
+
+        console.log(await createVariantsRes.text());
     };
 
     const formRef = useRef<HTMLFormElement>(null);

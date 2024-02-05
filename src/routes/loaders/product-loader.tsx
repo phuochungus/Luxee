@@ -19,6 +19,7 @@ export async function ProductLoader({ params }: any) {
     const res = await getProductById(params.id);
     switch (res.status) {
         case 200:
+            console.log(await res.json());
             return await res.json();
 
         default:
