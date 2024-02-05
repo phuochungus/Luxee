@@ -26,10 +26,10 @@ export interface Variant {
     committed: number;
     available: number;
     media?: Media[];
-    selectedOptionsValue: SelectedOptionValue[];
+    variantOptions: VariantOption[];
 }
 
-export interface SelectedOptionValue {
+export interface VariantOption {
     name: string;
     value: string;
     valueIndex: number;
@@ -82,7 +82,7 @@ export function Product() {
 
         const cartesianProduct = cartesian(onlyValuesArray);
         return cartesianProduct.map((array: string[]) => {
-            const selectedVariations: SelectedOptionValue[] = array.map(
+            const selectedVariations: VariantOption[] = array.map(
                 (value, index) => {
                     return {
                         name: filterEmptyVariations[index].name,
@@ -92,32 +92,32 @@ export function Product() {
                 }
             );
             return {
-                selectedOptionsValue: selectedVariations,
+                variantOptions: selectedVariations,
                 price: methods.getValues("price") || 0,
                 cost: methods.getValues("cost"),
                 unavailable: methods.getValues("unavailable"),
                 available: methods.getValues("available"),
                 committed: methods.getValues("committed"),
-            };
+            } as Variant;
         });
     };
 
-    useEffect(() => {
-        methods.setValue("options", [
-            {
-                name: "Color",
-                values: ["Red", "Blue", "Green"],
-            },
-            // {
-            //     name: "Size",
-            //     values: ["S", "M", "L"],
-            // },
-            // {
-            //     name: "Material",
-            //     values: ["Cotton", "Polyester", "Wool"],
-            // },
-        ]);
-    }, []);
+    // useEffect(() => {
+    //     methods.setValue("options", [
+    //         {
+    //             name: "Color",
+    //             values: ["Red", "Blue", "Green"],
+    //         },
+    //         // {
+    //         //     name: "Size",
+    //         //     values: ["S", "M", "L"],
+    //         // },
+    //         // {
+    //         //     name: "Material",
+    //         //     values: ["Cotton", "Polyester", "Wool"],
+    //         // },
+    //     ]);
+    // }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
         formRef.current?.classList.add("was-validated");
