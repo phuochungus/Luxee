@@ -9,3 +9,4 @@ export * from "./upload-media/delete-hover-button";
 export * from "./sidebar/sidebar";
 export * from "./product/product";
 export * from "./option-list/option-item";
+export * from "./sidebar/sidebar-item";

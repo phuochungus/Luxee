@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap-icons/bootstrap-icons.svg";
 import "./style.css";
+
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ProductPage, Error } from "@/pages";
 import { ProductLoader } from "@/routes/loaders";

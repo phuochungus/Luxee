@@ -9,7 +9,7 @@ export function ProductPage() {
                 width: "100%",
             }}
         >
-            <Sidebar />
+            <Sidebar name={"Products"} />
             <Product />
         </div>
     );

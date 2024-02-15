@@ -4,8 +4,14 @@ import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { Product } from "@/components";
 
 export interface Option {
+    optionId?: number;
     name: string;
-    values: String[];
+    values: Value[];
+}
+
+export interface Value {
+    valueId?: number;
+    value: string;
 }
 
 interface Props {
@@ -62,8 +68,8 @@ export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Pro
                         {rootMethods
                             .watch(`options.${parentFieldIndex}.values`)
                             .map((field) => (
-                                <li className="breadcrumb-item" key={field.toString()}>
-                                    <span>{field}</span>
+                                <li className="breadcrumb-item" key={field.value}>
+                                    <span>{field.value}</span>
                                 </li>
                             ))}
                     </ol>
@@ -120,7 +126,7 @@ export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Pro
                                         <input
                                             type="text"
                                             className="form-control"
-                                            {...register(`values.${index}`)}
+                                            {...register(`values.${index}.value`)}
                                             autoFocus={index == focusIndex}
                                         />
                                         <button

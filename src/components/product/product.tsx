@@ -9,6 +9,7 @@ import {
     Option,
     UploadMediaRef,
     Media,
+    Value,
 } from "@/components";
 import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
@@ -17,6 +18,7 @@ import { useLoaderData } from "react-router-dom";
 import { createProduct, createVariants, updateMedia } from "@/client";
 
 export interface Variant {
+    variantId?: number;
     sku?: string;
     barcode?: string;
     price: number;
@@ -26,13 +28,13 @@ export interface Variant {
     committed: number;
     available: number;
     media?: Media[];
-    variantOptions: VariantOption[];
+    variantOptionValues: VariantOptionValues[];
 }
 
-export interface VariantOption {
-    name: string;
-    value: string;
-    valueIndex: number;
+export interface VariantOptionValues {
+    optionId?: number;
+    valueId?: number;
+    value: Value;
 }
 
 export interface VariationListContextProps {
@@ -41,6 +43,7 @@ export interface VariationListContextProps {
 }
 
 export interface Product {
+    productId?: number;
     title: string;
     description: string;
     media: Media[];
@@ -75,24 +78,21 @@ export function Product() {
     const generateVariants = (options: Option[]): Variant[] => {
         if (options.length == 0) return [];
 
-        const filterEmptyVariations = options.filter((array) => array.values.length > 0);
-        const onlyValuesArray: String[][] = filterEmptyVariations.map(
-            (array) => array.values
+        const tmpOption = options.filter((a) => a.values.length != 0);
+
+        const cartesianProductOfValue: Value[][] = cartesian(
+            tmpOption.map((a) => a.values)
         );
 
-        const cartesianProduct = cartesian(onlyValuesArray);
-        return cartesianProduct.map((array: string[]) => {
-            const selectedVariations: VariantOption[] = array.map(
-                (value, index) => {
-                    return {
-                        name: filterEmptyVariations[index].name,
-                        value: value,
-                        valueIndex: filterEmptyVariations[index].values.indexOf(value),
-                    };
-                }
-            );
+        return cartesianProductOfValue.map((values) => {
+            const array: VariantOptionValues[] = values.map((value) => {
+                return {
+                    value: value,
+                };
+            });
+
             return {
-                variantOptions: selectedVariations,
+                variantOptionValues: array,
                 price: methods.getValues("price") || 0,
                 cost: methods.getValues("cost"),
                 unavailable: methods.getValues("unavailable"),
@@ -102,22 +102,18 @@ export function Product() {
         });
     };
 
-    // useEffect(() => {
-    //     methods.setValue("options", [
-    //         {
-    //             name: "Color",
-    //             values: ["Red", "Blue", "Green"],
-    //         },
-    //         // {
-    //         //     name: "Size",
-    //         //     values: ["S", "M", "L"],
-    //         // },
-    //         // {
-    //         //     name: "Material",
-    //         //     values: ["Cotton", "Polyester", "Wool"],
-    //         // },
-    //     ]);
-    // }, []);
+    useEffect(() => {
+        methods.setValue("options", [
+            {
+                name: "Color",
+                values: [{ value: "Red" }, { value: "Blue" }],
+            },
+            {
+                name: "Size",
+                values: [{ value: "S" }, { value: "M" }],
+            },
+        ]);
+    }, []);
 
     const onSubmit: SubmitHandler<Product> = async (product) => {
         formRef.current?.classList.add("was-validated");
@@ -125,17 +121,18 @@ export function Product() {
 
         const { variants, ...rest } = product;
 
-        const createProductRes = await createProduct(rest);
-        console.log(await createProductRes.text());
-        const productId = Number(await createProductRes.text());
+        try {
+            const createProductRes = await createProduct(rest);
+            const productId = Number(await createProductRes.text());
 
-        const media = await mediaRef.current!.sendMedia(productId);
-        const updateMediaRes = await updateMedia(productId, media);
-
-        console.log(await updateMediaRes.text());
-        const createVariantsRes = await createVariants(productId, product.variants);
-
-        console.log(await createVariantsRes.text());
+            const media = await mediaRef.current!.sendMedia(productId);
+            if (media.length != 0) {
+                await updateMedia(productId, media);
+            }
+            const createVariantsRes = await createVariants(productId, product.variants);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const formRef = useRef<HTMLFormElement>(null);

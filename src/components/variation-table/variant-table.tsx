@@ -29,8 +29,8 @@ export function VariantTable() {
                         <tr key={index}>
                             <th>{index + 1}</th>
                             <td>
-                                {variant.variantOptions
-                                    .map((a) => a.value)
+                                {variant.variantOptionValues
+                                    .map((a) => a.value.value)
                                     .join(" / ")}
                             </td>
                             <td>{variant.unavailable}</td>
