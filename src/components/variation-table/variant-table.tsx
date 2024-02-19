@@ -3,7 +3,6 @@ import { useFormContext } from "react-hook-form";
 
 export function VariantTable() {
     const { getValues } = useFormContext<Product>();
-
     return (
         <div>
             <table className="table table-striped">

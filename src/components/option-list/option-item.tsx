@@ -4,13 +4,13 @@ import { useFieldArray, useForm, useFormContext } from "react-hook-form";
 import { Product } from "@/components";
 
 export interface Option {
-    optionId?: number;
+    id?: number;
     name: string;
     values: Value[];
 }
 
 export interface Value {
-    valueId?: number;
+    id?: number;
     value: string;
 }
 
@@ -152,13 +152,12 @@ export function OptionListItem({ deleteOption, isToggle, parentFieldIndex }: Pro
                                         type="text"
                                         className="form-control"
                                         onBeforeInput={(e: any) => {
-                                            const value = e.data;
-                                            if (value == "") {
+                                            if (e.data == "") {
                                                 return;
                                             } else {
                                                 e.preventDefault();
+                                                append({ value: e.data });
                                                 setFocusIndex(getValues("values").length);
-                                                append(value);
                                             }
                                         }}
                                     />

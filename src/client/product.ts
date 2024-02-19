@@ -22,3 +22,12 @@ export const createProduct = async (product: any) =>
         },
         body: JSON.stringify(product),
     });
+
+export const updateProduct = async (product: any) =>
+    fetchBase(`/api/products/${product.id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+    });

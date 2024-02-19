@@ -24,7 +24,7 @@ export async function ProductLoader({ params }: any) {
         default:
             throw {
                 status: res.status,
-                message: await res.text(),
+                message: res,
             };
     }
 }

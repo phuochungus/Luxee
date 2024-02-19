@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
     GenerateCollapse,
     Inventory,
@@ -14,8 +14,14 @@ import {
 import cartesian from "cartesian";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import { OptionList } from "@/components/option-list/option-list";
-import { useLoaderData } from "react-router-dom";
-import { createProduct, createVariants, updateMedia } from "@/client";
+import { useLoaderData, useNavigate, useParams } from "react-router-dom";
+import {
+    createProduct,
+    createVariants,
+    getProductById,
+    updateMedia,
+    updateProduct,
+} from "@/client";
 
 export interface Variant {
     variantId?: number;
@@ -43,54 +49,64 @@ export interface VariationListContextProps {
 }
 
 export interface Product {
-    productId?: number;
+    id?: number;
     title: string;
     description: string;
     media: Media[];
-    price: number;
-    compareAt?: number;
-    cost: number;
+    price?: number;
+    compareAtPrice?: number;
+    cost?: number;
     sku?: string;
     barcode?: string;
-    unavailable: number;
-    committed: number;
-    available: number;
+    unavailable?: number;
+    committed?: number;
+    available?: number;
     options: Option[];
     variants: Variant[];
 }
 
 export function Product() {
+    const formRef = useRef<HTMLFormElement>(null);
+    const mediaRef = useRef<UploadMediaRef>(null);
+    const { id } = useParams();
+
     const methods = useForm<Product>({
         defaultValues: useLoaderData() as Product,
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         const subscription = methods.watch((_, { name }) => {
-            if (name?.includes("options"))
+            if (name?.includes("options")) {
                 methods.setValue(
                     "variants",
                     generateVariants(methods.getValues("options"))
                 );
+                if (methods.getValues("options").length != 0) {
+                    methods.setValue("price", undefined);
+                    methods.setValue("compareAtPrice", undefined);
+                    methods.setValue("cost", undefined);
+                    methods.setValue("unavailable", undefined);
+                    methods.setValue("available", undefined);
+                    methods.setValue("committed", undefined);
+                }
+            }
         });
         return () => subscription.unsubscribe();
     }, [methods.watch]);
 
     const generateVariants = (options: Option[]): Variant[] => {
         if (options.length == 0) return [];
-
         const tmpOption = options.filter((a) => a.values.length != 0);
-
         const cartesianProductOfValue: Value[][] = cartesian(
             tmpOption.map((a) => a.values)
         );
-
         return cartesianProductOfValue.map((values) => {
             const array: VariantOptionValues[] = values.map((value) => {
                 return {
                     value: value,
                 };
             });
-
             return {
                 variantOptionValues: array,
                 price: methods.getValues("price") || 0,
@@ -102,41 +118,55 @@ export function Product() {
         });
     };
 
-    useEffect(() => {
-        methods.setValue("options", [
-            {
-                name: "Color",
-                values: [{ value: "Red" }, { value: "Blue" }],
-            },
-            {
-                name: "Size",
-                values: [{ value: "S" }, { value: "M" }],
-            },
-        ]);
-    }, []);
-
     const onSubmit: SubmitHandler<Product> = async (product) => {
+        if (id != "new") {
+            await handleUpdateExistingProduct(product);
+        } else {
+            await handleCreateNewProduct(product);
+        }
+    };
+
+    const handleCreateNewProduct = async (product: Product) => {
         formRef.current?.classList.add("was-validated");
         if (!formRef.current?.checkValidity()) return;
-
         const { variants, ...rest } = product;
-
         try {
-            const createProductRes = await createProduct(rest);
-            const productId = Number(await createProductRes.text());
-
+            const productId = Number(await (await createProduct(rest)).text());
             const media = await mediaRef.current!.sendMedia(productId);
-            if (media.length != 0) {
-                await updateMedia(productId, media);
+            if (media.length != 0) await updateMedia(productId, media);
+            const newProduct: Product = await (await getProductById(productId)).json();
+            product.options = newProduct.options;
+            product.id = newProduct.id;
+            product.media = newProduct.media;
+            for (let i = 0; i < product.variants.length; i++) {
+                let variant = product.variants[i];
+                let c = 0;
+                variant.variantOptionValues.forEach((v) => {
+                    let option = product.options[c];
+                    v.optionId = option.id;
+                    v.valueId = option.values.find((a) => a.value == v.value.value)?.id;
+                    c++;
+                });
+                c = 0;
             }
-            const createVariantsRes = await createVariants(productId, product.variants);
+            await createVariants(productId, product.variants);
+            navigate(`/products/${productId}`);
         } catch (error) {
+            // TODO: CREATE TOAST ABOUT THE ERROR MESSAGE
             console.error(error);
         }
     };
 
-    const formRef = useRef<HTMLFormElement>(null);
-    const mediaRef = useRef<UploadMediaRef>(null);
+    const handleUpdateExistingProduct = async (product: Product) => {
+        formRef.current?.classList.add("was-validated");
+        if (!formRef.current?.checkValidity()) return;
+        const { variants, ...rest } = product;
+        try {
+            await updateProduct(rest);
+            const media = await mediaRef.current!.sendMedia(product.id!);
+            if (media.length != 0) await updateMedia(product.id!, media);
+        } catch (error) {}
+    };
 
     return (
         <FormProvider {...methods}>
@@ -194,7 +224,10 @@ export function Product() {
                             </div>
                             <div className="mb-3">
                                 <h5>Media</h5>
-                                <UploadMedia ref={mediaRef} />
+                                <UploadMedia
+                                    media={methods.watch("media")}
+                                    ref={mediaRef}
+                                />
                             </div>
                             {!methods.watch("variants")?.length && (
                                 <>

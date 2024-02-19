@@ -4,7 +4,7 @@ import { OptionListItem, Product } from "@/components";
 import "./style.css";
 
 export function OptionList() {
-    const { control } = useFormContext<Product>();
+    const { control, setValue } = useFormContext<Product>();
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -27,7 +27,9 @@ export function OptionList() {
                 <span
                     id="add-variation"
                     className="text-primary"
-                    onClick={() => append({ name: "", values: [] })}
+                    onClick={() => {
+                        append({ name: "", values: [] });
+                    }}
                 >
                     + Add more...
                 </span>
